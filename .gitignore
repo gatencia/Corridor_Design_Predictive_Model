@@ -220,3 +220,6 @@ config/local_config.py
 *.db
 *.sqlite
 *.sqlite3
+
+# Ignore all PDF files
+*.pdf

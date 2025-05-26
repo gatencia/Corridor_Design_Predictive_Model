@@ -1,0 +1,174 @@
+{
+  "test_timestamp": "20250526_164344",
+  "overall_status": "\u274c CRITICAL ISSUES - NOT READY FOR STEP 3",
+  "test_summary": {
+    "total_tests": 10,
+    "passed_tests": 7,
+    "warned_tests": 2,
+    "failed_tests": 1
+  },
+  "critical_failures": [],
+  "warnings": [
+    "GPS coordinates outside expected Central Africa bounds"
+  ],
+  "errors": [
+    "Export testing error: 'file_exports'"
+  ],
+  "detailed_results": {
+    "environment": {
+      "missing_libraries": [],
+      "version_issues": [],
+      "status": "PASS"
+    },
+    "data_files": {
+      "total_files": 24,
+      "valid_files": 24,
+      "total_gps_points": 15098,
+      "file_issues": [],
+      "status": "PASS"
+    },
+    "data_quality": {
+      "avg_coordinate_validity": 1.0,
+      "total_temporal_issues": "0",
+      "total_speed_issues": "1",
+      "total_duplicates": "179",
+      "total_gaps": "34",
+      "files_tested": 5,
+      "status": "PASS"
+    },
+    "geospatial": {
+      "crs_original": "EPSG:4326",
+      "crs_transform_success": true,
+      "bounds": [
+        5.752,
+        0.238,
+        16.441,
+        2.296
+      ],
+      "bounds_reasonable": "False",
+      "convex_hull_area": 1.2023359999999954,
+      "status": "PASS"
+    },
+    "aoi_generation": {
+      "total_aois_tested": 9,
+      "successful_aois": 3,
+      "success_rate": 0.3333333333333333,
+      "aoi_details": [
+        {
+          "file": "Elephant Research - Lobeke NP (Cameroon) - Collar 39840 [2003-2004].csv",
+          "buffer_km": 1.0,
+          "area_km2": 17414.779277988633,
+          "reasonable": "False"
+        },
+        {
+          "file": "Elephant Research - Lobeke NP (Cameroon) - Collar 39840 [2003-2004].csv",
+          "buffer_km": 5.0,
+          "area_km2": 27212.729507354416,
+          "reasonable": "False"
+        },
+        {
+          "file": "Elephant Research - Lobeke NP (Cameroon) - Collar 39840 [2003-2004].csv",
+          "buffer_km": 10.0,
+          "area_km2": 39601.317022606265,
+          "reasonable": "False"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40479.csv",
+          "buffer_km": 1.0,
+          "area_km2": 1897.4927154654404,
+          "reasonable": "True"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40479.csv",
+          "buffer_km": 5.0,
+          "area_km2": 2608.943997717772,
+          "reasonable": "True"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40479.csv",
+          "buffer_km": 10.0,
+          "area_km2": 3639.402277816396,
+          "reasonable": "True"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40480.csv",
+          "buffer_km": 1.0,
+          "area_km2": 31383.69821553591,
+          "reasonable": "False"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40480.csv",
+          "buffer_km": 5.0,
+          "area_km2": 37808.582193605835,
+          "reasonable": "False"
+        },
+        {
+          "file": "Elephant Research - Nki National Park (Cameroon) - Collar 40480.csv",
+          "buffer_km": 10.0,
+          "area_km2": 45980.83545916458,
+          "reasonable": "False"
+        }
+      ],
+      "status": "WARN"
+    },
+    "file_exports": {
+      "status": "FAIL",
+      "error": "'file_exports'"
+    },
+    "step3_readiness": {
+      "requirements": {
+        "projected_crs": true,
+        "utm_coordinates": true,
+        "aoi_polygons": true,
+        "gps_points_valid": true,
+        "spatial_extent_reasonable": false,
+        "file_formats_compatible": true
+      },
+      "requirements_met": 5,
+      "total_requirements": 6,
+      "readiness_score": 0.8333333333333334,
+      "readiness_status": "MOSTLY_READY",
+      "readiness_message": "\u26a0\ufe0f  Mostly ready for Step 3 - minor issues to address",
+      "status": "PASS"
+    },
+    "performance": {
+      "avg_processing_time": 0.09844159999999999,
+      "max_processing_time": 0.156848,
+      "files_tested": 5,
+      "performance_acceptable": true,
+      "status": "PASS"
+    },
+    "error_handling": {
+      "tests": {
+        "empty_file": true,
+        "corrupted_data": false,
+        "missing_columns": true,
+        "invalid_coordinates": false,
+        "invalid_timestamps": true
+      },
+      "successful_tests": 3,
+      "total_tests": 5,
+      "status": "WARN"
+    },
+    "data_completeness": {
+      "num_study_sites": 9,
+      "avg_temporal_coverage": 356.7916666666667,
+      "total_gps_points": 15095,
+      "total_individuals": 24,
+      "completeness_score": 1.0,
+      "completeness_status": "EXCELLENT",
+      "study_sites": [
+        "Waza National Park",
+        "Nki National Park",
+        "Yankari Game Reserve",
+        "Bouba Njida National Park",
+        "Lobeke National Park",
+        "Mt. Cameroon",
+        "Lobeke NP",
+        "Dja Reserve",
+        "Benoue National Park"
+      ],
+      "status": "PASS"
+    }
+  }
+}

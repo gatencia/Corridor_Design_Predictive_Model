@@ -5,7 +5,7 @@ Handles CRS detection, transformation, and UTM zone selection.
 
 import geopandas as gpd
 import pyproj
-from typing import str, Tuple, Dict
+from typing import Tuple, Dict
 import logging
 
 logger = logging.getLogger(__name__)

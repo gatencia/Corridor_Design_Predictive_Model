@@ -320,36 +320,57 @@ class ProjectConfig:
     
     def load_env_variables(self) -> None:
         """Load configuration from environment variables."""
-        
+
+        def get_clean_env_var(key: str) -> Optional[str]:
+            val = os.getenv(key)
+            if val is not None:
+                return val.split('#')[0].strip()
+            return None
+
         # Elephant parameters
-        if os.getenv('ELEPHANT_MASS_FEMALE'):
-            self.elephant.mass_female_kg = float(os.getenv('ELEPHANT_MASS_FEMALE'))
-        if os.getenv('ELEPHANT_MASS_MALE'):
-            self.elephant.mass_male_kg = float(os.getenv('ELEPHANT_MASS_MALE'))
+        female_mass_str = get_clean_env_var('ELEPHANT_MASS_FEMALE')
+        if female_mass_str:
+            self.elephant.mass_female_kg = float(female_mass_str)
+        
+        male_mass_str = get_clean_env_var('ELEPHANT_MASS_MALE')
+        if male_mass_str:
+            self.elephant.mass_male_kg = float(male_mass_str)
         
         # GIS parameters
-        if os.getenv('DEFAULT_CRS'):
-            self.gis.default_projected_crs = os.getenv('DEFAULT_CRS')
-        if os.getenv('DEFAULT_BUFFER_DISTANCE'):
-            self.gis.buffer_distance_m = float(os.getenv('DEFAULT_BUFFER_DISTANCE'))
-        if os.getenv('DEFAULT_DEM_RESOLUTION'):
-            self.gis.default_resolution_m = float(os.getenv('DEFAULT_DEM_RESOLUTION'))
+        default_crs_str = get_clean_env_var('DEFAULT_CRS')
+        if default_crs_str: # Assuming DEFAULT_CRS does not need float conversion
+            self.gis.default_projected_crs = default_crs_str
+        
+        buffer_distance_str = get_clean_env_var('DEFAULT_BUFFER_DISTANCE')
+        if buffer_distance_str:
+            self.gis.buffer_distance_m = float(buffer_distance_str)
+        
+        dem_resolution_str = get_clean_env_var('DEFAULT_DEM_RESOLUTION')
+        if dem_resolution_str:
+            self.gis.default_resolution_m = float(dem_resolution_str)
         
         # Map center
-        if os.getenv('MAP_CENTER_LAT'):
-            self.visualization.map_center_lat = float(os.getenv('MAP_CENTER_LAT'))
-        if os.getenv('MAP_CENTER_LON'):
-            self.visualization.map_center_lon = float(os.getenv('MAP_CENTER_LON'))
+        map_center_lat_str = get_clean_env_var('MAP_CENTER_LAT')
+        if map_center_lat_str:
+            self.visualization.map_center_lat = float(map_center_lat_str)
+        
+        map_center_lon_str = get_clean_env_var('MAP_CENTER_LON')
+        if map_center_lon_str:
+            self.visualization.map_center_lon = float(map_center_lon_str)
         
         # Processing parameters
-        if os.getenv('MAX_WORKERS'):
-            self.processing.max_workers = int(os.getenv('MAX_WORKERS'))
-        if os.getenv('MEMORY_LIMIT_GB'):
-            self.processing.memory_limit_gb = int(os.getenv('MEMORY_LIMIT_GB'))
+        max_workers_str = get_clean_env_var('MAX_WORKERS')
+        if max_workers_str:
+            self.processing.max_workers = int(max_workers_str)
+            
+        memory_limit_gb_str = get_clean_env_var('MEMORY_LIMIT_GB')
+        if memory_limit_gb_str:
+            self.processing.memory_limit_gb = int(memory_limit_gb_str)
         
         # Logging
-        if os.getenv('LOG_LEVEL'):
-            self.logging.level = os.getenv('LOG_LEVEL')
+        log_level_str = get_clean_env_var('LOG_LEVEL')
+        if log_level_str: # Assuming LOG_LEVEL does not need float conversion
+            self.logging.level = log_level_str
     
     def save_config(self, output_file: str) -> None:
         """Save current configuration to YAML file."""

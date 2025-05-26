@@ -1,0 +1,326 @@
+{
+  "processing_timestamp": "20250526_164345",
+  "total_study_sites": 24,
+  "buffer_distance_km": 5.0,
+  "total_gps_points": 15095,
+  "total_aoi_area_km2": 593210.549453453,
+  "study_sites": [
+    {
+      "study_site": "Lobeke NP",
+      "collar_info": "Collar 39840 [2003-2004]",
+      "source_file": "Elephant Research - Lobeke NP (Cameroon) - Collar 39840 [2003-2004].csv",
+      "gps_points": 804,
+      "individuals": 1,
+      "area_km2": 27212.729507354416,
+      "tracking_days": 300,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_NP_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_NP_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Nki National Park",
+      "collar_info": "Collar 40479",
+      "source_file": "Elephant Research - Nki National Park (Cameroon) - Collar 40479.csv",
+      "gps_points": 533,
+      "individuals": 1,
+      "area_km2": 2608.943997717772,
+      "tracking_days": 229,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Nki_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Nki_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Nki National Park",
+      "collar_info": "Collar 40480",
+      "source_file": "Elephant Research - Nki National Park (Cameroon) - Collar 40480.csv",
+      "gps_points": 1049,
+      "individuals": 1,
+      "area_km2": 37808.582193605835,
+      "tracking_days": 746,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Nki_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Nki_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Lobeke National Park",
+      "collar_info": "Collar 14118",
+      "source_file": "Elephant Research - Lobeke National Park (Cameroon) - Collar 14118.csv",
+      "gps_points": 718,
+      "individuals": 1,
+      "area_km2": 6179.425859375334,
+      "tracking_days": 454,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Waza National Park",
+      "collar_info": "Collar 47793",
+      "source_file": "Elephant Research - Waza National Park (Cameroon) - Collar 47793.csv",
+      "gps_points": 76,
+      "individuals": 1,
+      "area_km2": 509.8883039276521,
+      "tracking_days": 24,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Waza National Park",
+      "collar_info": "Collar 03273",
+      "source_file": "Elephant Research - Waza National Park (Cameroon) - Collar 03273.csv",
+      "gps_points": 261,
+      "individuals": 1,
+      "area_km2": 9665.69762699084,
+      "tracking_days": 216,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Yankari Game Reserve (Nigeria)",
+      "collar_info": "Collar 126821",
+      "source_file": "Elephant Research - Yankari Game Reserve (Nigeria) - Collar 126821.csv",
+      "gps_points": 767,
+      "individuals": 1,
+      "area_km2": 4541.196092862106,
+      "tracking_days": 219,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Yankari_Game_Reserve_(Nigeria)_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Yankari_Game_Reserve_(Nigeria)_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Yankari Game Reserve (Nigeria)",
+      "collar_info": "Collar 126820",
+      "source_file": "Elephant Research - Yankari Game Reserve (Nigeria) - Collar 126820.csv",
+      "gps_points": 1422,
+      "individuals": 1,
+      "area_km2": 23244.614099879924,
+      "tracking_days": 502,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Yankari_Game_Reserve_(Nigeria)_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Yankari_Game_Reserve_(Nigeria)_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Bouba Njida National Park",
+      "collar_info": "Collar 14117",
+      "source_file": "Elephant Research - Bouba Njida National Park (Cameroon) - Collar 14117.csv",
+      "gps_points": 372,
+      "individuals": 1,
+      "area_km2": 9169.411652121034,
+      "tracking_days": 498,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Bouba_Njida_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Bouba_Njida_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Dja Reserve",
+      "collar_info": "Collar 46178",
+      "source_file": "Elephant Research - Dja Reserve (Cameroon) - Collar 46178.csv",
+      "gps_points": 83,
+      "individuals": 1,
+      "area_km2": 3906.5611422459087,
+      "tracking_days": 196,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Dja_Reserve_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Dja_Reserve_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Lobeke National Park",
+      "collar_info": "Collar 14120",
+      "source_file": "Elephant Research - Lobeke National Park (Cameroon) - Collar 14120.csv",
+      "gps_points": 718,
+      "individuals": 1,
+      "area_km2": 6179.425859375334,
+      "tracking_days": 454,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Dja Reserve",
+      "collar_info": "Collar 46178 copy",
+      "source_file": "Elephant Research - Dja Reserve (Cameroon) - Collar 46178 copy.csv",
+      "gps_points": 83,
+      "individuals": 1,
+      "area_km2": 3906.5611422459087,
+      "tracking_days": 196,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Dja_Reserve_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Dja_Reserve_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Mt. Cameroon",
+      "collar_info": "Collar 87528",
+      "source_file": "Elephant Research - Mt. Cameroon - Collar 87528.csv",
+      "gps_points": 390,
+      "individuals": 1,
+      "area_km2": 5708.831720064587,
+      "tracking_days": 706,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Lobeke NP",
+      "collar_info": "Collar 47574 [Dec 2005-2006]",
+      "source_file": "Elephant Research - Lobeke NP (Cameroon) - Collar 47574 [Dec 2005-2006].csv",
+      "gps_points": 197,
+      "individuals": 1,
+      "area_km2": 5027.499245264894,
+      "tracking_days": 167,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_NP_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_NP_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Waza National Park",
+      "collar_info": "Collar 47571",
+      "source_file": "Elephant Research - Waza National Park (Cameroon) - Collar 47571.csv",
+      "gps_points": 1477,
+      "individuals": 1,
+      "area_km2": 273966.05528532667,
+      "tracking_days": 429,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Waza_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Mt. Cameroon",
+      "collar_info": "Collar 73057",
+      "source_file": "Elephant Research - Mt. Cameroon - Collar 73057.csv",
+      "gps_points": 324,
+      "individuals": 1,
+      "area_km2": 8747.122324499844,
+      "tracking_days": 265,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Mt. Cameroon",
+      "collar_info": "Collar 73056",
+      "source_file": "Elephant Research - Mt. Cameroon - Collar 73056.csv",
+      "gps_points": 1283,
+      "individuals": 1,
+      "area_km2": 51666.21059339696,
+      "tracking_days": 482,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Benoue National Park",
+      "collar_info": "Collar 47792",
+      "source_file": "Elephant Research - Benoue National Park (Cameroon) - Collar 47792.csv",
+      "gps_points": 2102,
+      "individuals": 1,
+      "area_km2": 76861.387689663,
+      "tracking_days": 769,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Benoue National Park",
+      "collar_info": "Collar 14121",
+      "source_file": "Elephant Research - Benoue National Park (Cameroon) - Collar 14121.csv",
+      "gps_points": 65,
+      "individuals": 1,
+      "area_km2": 5676.496672011038,
+      "tracking_days": 63,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Lobeke National Park",
+      "collar_info": "Collar 46179",
+      "source_file": "Elephant Research - Lobeke National Park (Cameroon) - Collar 46179.csv",
+      "gps_points": 250,
+      "individuals": 1,
+      "area_km2": 1187.2727191050838,
+      "tracking_days": 103,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Mt. Cameroon",
+      "collar_info": "Collar 99095 (1)",
+      "source_file": "Elephant Research - Mt. Cameroon - Collar 99095 (1).csv",
+      "gps_points": 1037,
+      "individuals": 1,
+      "area_km2": 4049.750584335569,
+      "tracking_days": 459,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Mt._Cameroon_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Benoue National Park",
+      "collar_info": "Collar 09104",
+      "source_file": "Elephant Research - Benoue National Park (Cameroon) - Collar 09104.csv",
+      "gps_points": 146,
+      "individuals": 1,
+      "area_km2": 15602.485517452627,
+      "tracking_days": 432,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Benoue National Park",
+      "collar_info": "Collar 09105",
+      "source_file": "Elephant Research - Benoue National Park (Cameroon) - Collar 09105.csv",
+      "gps_points": 911,
+      "individuals": 1,
+      "area_km2": 9677.16172557818,
+      "tracking_days": 465,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Benoue_National_Park_20250526_164345.shp"
+      }
+    },
+    {
+      "study_site": "Lobeke National Park",
+      "collar_info": "Collar 39839",
+      "source_file": "Elephant Research - Lobeke National Park (Cameroon) - Collar 39839.csv",
+      "gps_points": 27,
+      "individuals": 1,
+      "area_km2": 107.23789905267421,
+      "tracking_days": 189,
+      "files_created": {
+        "geojson": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.geojson",
+        "shapefile": "data/outputs/individual_aois/aoi_Lobeke_National_Park_20250526_164345.shp"
+      }
+    }
+  ],
+  "files_created": {
+    "combined_aoi_geojson": "data/outputs/all_aois_combined_20250526_164345.geojson",
+    "combined_aoi_shapefile": "data/outputs/all_aois_combined_20250526_164345.shp",
+    "individual_aois_directory": "data/outputs/individual_aois"
+  }
+}

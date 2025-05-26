@@ -1,0 +1,4 @@
+event-id,visible,timestamp,location-long,location-lat,tag-local-identifier,individual-local-identifier
+1,TRUE,2024-01-01 12:00:00,13.0,8.0,TEST001,1
+2,TRUE,2024-01-01 13:00:00,13.01,8.01,TEST001,1
+3,TRUE,2024-01-01 14:00:00,13.02,8.02,TEST001,1

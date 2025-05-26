@@ -1,0 +1,1 @@
+"""Custom exception classes for GPS data processing"""

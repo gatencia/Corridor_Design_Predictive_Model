@@ -1,4 +1,3 @@
-# Conda environment specification
 name: elephant-corridors
 channels:
   - conda-forge
@@ -6,59 +5,56 @@ channels:
 dependencies:
   # Core Python
   - python=3.10
-  - pip=23.3
+  - pip
   
-  # Geospatial libraries
-  - geopandas=0.13
-  - rasterio=1.3
-  - fiona=1.9
-  - shapely=2.0
-  - pyproj=3.6
-  - gdal=3.7
-  - proj=9.3
-  - geos=3.12
+  # Geospatial libraries (flexible versions to resolve conflicts)
+  - geopandas>=0.13
+  - rasterio>=1.3
+  - fiona>=1.9
+  - shapely>=2.0
+  - pyproj>=3.6
+  - gdal>=3.7
+  - proj>=9.3
+  - geos>=3.12
   
   # Scientific computing
-  - numpy=1.24
-  - pandas=2.0
-  - scipy=1.11
-  - scikit-image=0.20
-  - scikit-learn=1.3
+  - numpy>=1.24
+  - pandas>=2.0
+  - scipy>=1.11
+  - scikit-image>=0.20
+  - scikit-learn>=1.3
   
   # Visualization
-  - matplotlib=3.7
-  - folium=0.14
-  - contextily=1.4
-  - plotly=5.17
+  - matplotlib>=3.7
+  - folium>=0.14
+  - contextily>=1.4
+  - plotly>=5.17
   
   # Interactive dashboards (optional)
-  - dash=2.11
-  - jupyter=1.0
-  - jupyterlab=4.0
+  - dash>=2.11
+  - jupyter
+  - jupyterlab
   
   # Testing
-  - pytest=7.3
-  - pytest-cov=4.1
+  - pytest>=7.3
+  - pytest-cov>=4.1
   
-  # R integration for energyscape
-  - r-base=4.3
-  - r-terra=1.7
-  - rpy2=3.5
+  # R integration (simplified - install R packages separately)
+  - r-base>=4.3
+  - rpy2>=3.5
   
   # Utilities
-  - tqdm=4.66
-  - click=8.1
-  - pyyaml=6.0
-  - python-dotenv=1.0
-  - requests=2.31
+  - tqdm>=4.66
+  - click>=8.1
+  - pyyaml>=6.0
+  - python-dotenv>=1.0
+  - requests>=2.31
   
   # Development tools
-  - black=23.7
-  - flake8=6.0
-  - isort=5.12
+  - black>=23.7
+  - flake8>=6.0
+  - isort>=5.12
   
   # Pip-only packages
   - pip:
     - circuitscape==4.0.5
-    - enerscape-python==0.1.0  # Custom implementation placeholder
-    - folium-plugins==0.3.0

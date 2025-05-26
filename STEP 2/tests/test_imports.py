@@ -68,10 +68,26 @@ def test_imports():
         # Test 3: Exception imports
         try:
             print("3. Testing exception imports...")
-            from exceptions.validation_errors import GPSValidationError
-            print("   ✅ Exceptions imported successfully")
+            # Test importing all defined custom exceptions from the exceptions package
+            # This relies on src/exceptions/__init__.py correctly exporting them.
+            from exceptions import (
+                GPSValidationError,
+                CoordinateValidationError,
+                TemporalValidationError,
+                FileFormatError,
+                CRSTransformationError
+            )
+            # Optionally, instantiate one to verify it's usable (basic check)
+            _ = GPSValidationError("test message for import check")
+            print("   ✅ All custom exceptions imported successfully from 'exceptions' package.")
         except ImportError as e:
-            print(f"   ❌ Failed to import exceptions: {e}")
+            print(f"   ❌ Failed to import from 'exceptions' package: {e}")
+            # Add more debug info if needed:
+            # import traceback
+            # print(traceback.format_exc())
+            return False
+        except Exception as e: # Catch other errors like instantiation issues
+            print(f"   ❌ Error during exception testing (e.g., instantiation): {e}")
             return False
         
         # Test 4: Required libraries

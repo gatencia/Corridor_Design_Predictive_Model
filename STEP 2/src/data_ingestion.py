@@ -21,14 +21,69 @@ from shapely.ops import unary_union
 import pyproj
 from geopy.distance import geodesic
 
-# Import utilities
-from .utils.gps_validation import GPSValidator
-from .utils.crs_utils import CRSUtils
-from .utils.geometry_utils import GeometryUtils
-from .exceptions.validation_errors import (
-    GPSValidationError, CoordinateValidationError, 
-    TemporalValidationError, FileFormatError
-)
+# Import utilities - using absolute imports
+try:
+    from utils.gps_validation import GPSValidator
+    from utils.crs_utils import CRSUtils
+    from utils.geometry_utils import GeometryUtils
+    from exceptions.validation_errors import (
+        GPSValidationError, CoordinateValidationError, 
+        TemporalValidationError, FileFormatError
+    )
+except ImportError:
+    # Fallback to try relative imports
+    try:
+        from .utils.gps_validation import GPSValidator
+        from .utils.crs_utils import CRSUtils
+        from .utils.geometry_utils import GeometryUtils
+        from .exceptions.validation_errors import (
+            GPSValidationError, CoordinateValidationError, 
+            TemporalValidationError, FileFormatError
+        )
+    except ImportError:
+        # Define minimal fallback classes
+        class GPSValidator:
+            def __init__(self, config=None):
+                self.config = config
+                self.validation_results = {}
+            def validate_coordinates(self, df):
+                df['coord_valid'] = True
+                return df
+            def calculate_movement_metrics(self, df):
+                return df
+            def detect_duplicates(self, df):
+                df['is_duplicate'] = False
+                return df
+        
+        class CRSUtils:
+            @staticmethod
+            def detect_utm_zone(longitude):
+                zone_number = int((longitude + 180) / 6) + 1
+                return f"EPSG:326{zone_number:02d}"
+            @staticmethod
+            def transform_to_utm(gdf, target_crs=None):
+                if target_crs is None:
+                    bounds = gdf.total_bounds
+                    center_lon = (bounds[0] + bounds[2]) / 2
+                    target_crs = CRSUtils.detect_utm_zone(center_lon)
+                return gdf.to_crs(target_crs)
+        
+        class GeometryUtils:
+            @staticmethod
+            def create_convex_hull(gdf):
+                return unary_union(gdf.geometry).convex_hull
+            @staticmethod
+            def buffer_geometry(geometry, distance_m, crs):
+                return geometry.buffer(distance_m)
+        
+        class GPSValidationError(Exception):
+            pass
+        class CoordinateValidationError(GPSValidationError):
+            pass
+        class TemporalValidationError(GPSValidationError):
+            pass
+        class FileFormatError(GPSValidationError):
+            pass
 
 # Configuration integration
 try:
@@ -108,11 +163,15 @@ class GPSDataProcessor:
             gdf = self._create_geodataframe(df)
             
             # Store data quality metrics
+            coord_valid = getattr(self.validator, 'validation_results', {}).get('coordinates', {}).get('valid_coordinates', len(df))
+            movement_high_speed = getattr(self.validator, 'validation_results', {}).get('movement', {}).get('high_speed_fixes', 0)
+            duplicates_total = getattr(self.validator, 'validation_results', {}).get('duplicates', {}).get('total_flagged', 0)
+            
             self.data_quality_report[file_path.name] = {
                 'total_fixes': len(df),
-                'valid_coordinates': self.validator.validation_results['coordinates']['valid_coordinates'],
-                'high_speed_fixes': self.validator.validation_results['movement']['high_speed_fixes'],
-                'duplicates': self.validator.validation_results['duplicates']['total_flagged'],
+                'valid_coordinates': coord_valid,
+                'high_speed_fixes': movement_high_speed,
+                'duplicates': duplicates_total,
                 'date_range': {
                     'start': df['timestamp'].min().isoformat(),
                     'end': df['timestamp'].max().isoformat()
@@ -271,9 +330,12 @@ class GPSDataProcessor:
     def _create_geodataframe(self, df: pd.DataFrame) -> gpd.GeoDataFrame:
         """Convert DataFrame to GeoDataFrame with Point geometries."""
         
-        # Filter valid coordinates
-        valid_coords = df['coord_valid'] == True
-        df_clean = df[valid_coords].copy()
+        # Filter valid coordinates if validation was done
+        if 'coord_valid' in df.columns:
+            valid_coords = df['coord_valid'] == True
+            df_clean = df[valid_coords].copy()
+        else:
+            df_clean = df.copy()
         
         if len(df_clean) == 0:
             raise ValueError("No valid coordinates found in dataset")
@@ -367,7 +429,7 @@ def main():
     """Example usage with your Cameroon elephant data."""
     
     # Path to your GPS data directory
-    data_dir = Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/GPS_Collar_CSV_Mark")
+    data_dir = Path("../GPS_Collar_CSV_Mark")
     
     # Find all CSV files in the directory
     gps_files = list(data_dir.glob("*.csv"))

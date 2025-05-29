@@ -176,14 +176,18 @@ class EnergyScapeManager:
     
     def get_step3_data_dirs(self) -> Dict[str, Path]:
         """Get Step 3 data directories."""
-        step3_dir = Path(__file__).parent.parent
+        step3_root_dir = Path(__file__).parent.parent  # This is STEP 3/
+        project_root_dir = step3_root_dir.parent      # This is Elephant_Corridor_Research/
+        
+        step2_5_output_dir = project_root_dir / "STEP 2.5" / "outputs" / "aoi_specific_dems"
+        
         return {
-            'raw_dem': step3_dir / "data" / "raw" / "dem",
-            'raw_ndvi': step3_dir / "data" / "raw" / "ndvi",
-            'processed_dem': step3_dir / "data" / "processed" / "dem_clipped",
-            'energy_surfaces': step3_dir / "data" / "processed" / "energy_surfaces",
-            'outputs': step3_dir / "data" / "outputs",
-            'net_energy': step3_dir / "data" / "outputs" / "net_energy_surfaces"
+            'raw_dem': step2_5_output_dir,  # Changed to point to STEP 2.5 outputs
+            'raw_ndvi': step3_root_dir / "data" / "raw" / "ndvi",
+            'processed_dem': step3_root_dir / "data" / "processed" / "dem_clipped",
+            'energy_surfaces': step3_root_dir / "data" / "processed" / "energy_surfaces",
+            'outputs': step3_root_dir / "data" / "outputs",
+            'net_energy': step3_root_dir / "data" / "outputs" / "net_energy_surfaces"
         }
     
     def validate_configuration(self) -> bool:

@@ -1,0 +1,1 @@
+# Validate energy cost calculations

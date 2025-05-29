@@ -62,15 +62,127 @@ class EnerscapeRBridge:
                 logger.info(f"R found: {r_version}")
                 return True
             else:
-                logger.error(f"R enerscape calculation failed: {result.stderr}")
+                logger.error(f"R version check failed: {result.stderr}")
                 logger.error(f"R stdout: {result.stdout}")
                 return False
                 
         except subprocess.TimeoutExpired:
-            logger.error(f"R enerscape calculation timed out after {self.r_timeout} seconds")
+            logger.error(f"R version check timed out after 10 seconds")
+            return False
+        except FileNotFoundError:
+            logger.error("R not found in PATH")
             return False
         except Exception as e:
-            logger.error(f"Error running R enerscape calculation: {e}")
+            logger.error(f"Error checking R availability: {e}")
+            return False
+    
+    def _check_enerscape_availability(self) -> bool:
+        """Check if R enerscape package is available."""
+        if not self.r_available:
+            return False
+        
+        try:
+            # Try to check if enerscape package is installed
+            r_script = '''
+            # Check if enerscape package is available
+            if ("enerscape" %in% rownames(installed.packages())) {
+                cat("ENERSCAPE_AVAILABLE\\n")
+            } else {
+                cat("ENERSCAPE_NOT_AVAILABLE\\n")
+            }
+            
+            # Also check terra package (often required)
+            if ("terra" %in% rownames(installed.packages())) {
+                cat("TERRA_AVAILABLE\\n")
+            } else {
+                cat("TERRA_NOT_AVAILABLE\\n")
+            }
+            '''
+            
+            result = subprocess.run(['R', '--slave', '--no-restore', '--no-save'],
+                                  input=r_script, text=True, capture_output=True,
+                                  timeout=30)
+            
+            if result.returncode == 0:
+                output = result.stdout
+                enerscape_available = "ENERSCAPE_AVAILABLE" in output
+                terra_available = "TERRA_AVAILABLE" in output
+                
+                if enerscape_available:
+                    logger.info("R enerscape package is available")
+                    return True
+                else:
+                    logger.warning("R enerscape package not found")
+                    if not terra_available:
+                        logger.warning("R terra package also not found")
+                    return False
+            else:
+                logger.error(f"Error checking enerscape availability: {result.stderr}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            logger.error("Timeout checking enerscape availability")
+            return False
+        except Exception as e:
+            logger.error(f"Exception checking enerscape availability: {e}")
+            return False
+    
+    def install_enerscape(self) -> bool:
+        """
+        Install R enerscape package if not available.
+        
+        Returns:
+        --------
+        bool
+            True if installation successful
+        """
+        if not self.r_available:
+            logger.error("R not available - cannot install enerscape")
+            return False
+        
+        logger.info("Attempting to install R enerscape package...")
+        
+        r_script = '''
+        # Set CRAN mirror
+        options(repos = c(CRAN = "https://cloud.r-project.org/"))
+        
+        # Install required packages
+        required_packages <- c("terra", "enerscape")
+        
+        for (pkg in required_packages) {
+            if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+                cat(paste("Installing", pkg, "...\\n"))
+                install.packages(pkg, dependencies = TRUE)
+                if (require(pkg, character.only = TRUE, quietly = TRUE)) {
+                    cat(paste(pkg, "installed successfully\\n"))
+                } else {
+                    cat(paste("Failed to install", pkg, "\\n"))
+                }
+            } else {
+                cat(paste(pkg, "already installed\\n"))
+            }
+        }
+        '''
+        
+        try:
+            result = subprocess.run(['R', '--slave', '--no-restore', '--no-save'],
+                                  input=r_script, text=True, capture_output=True,
+                                  timeout=300)  # 5 minute timeout for installation
+            
+            if result.returncode == 0:
+                logger.info("R package installation completed")
+                # Re-check availability
+                self.enerscape_available = self._check_enerscape_availability()
+                return self.enerscape_available
+            else:
+                logger.error(f"R package installation failed: {result.stderr}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            logger.error("R package installation timed out")
+            return False
+        except Exception as e:
+            logger.error(f"Error installing R packages: {e}")
             return False
     
     def calculate_net_energy_surface_r(self, energy_surface_path: Union[str, Path],
@@ -162,8 +274,12 @@ class EnerscapeRBridge:
                 return True
             else:
                 logger.error(f"Net energy calculation failed: {result.stderr}")
+                logger.error(f"R stdout: {result.stdout}")
                 return False
                 
+        except subprocess.TimeoutExpired:
+            logger.error(f"Net energy calculation timed out after {self.r_timeout} seconds")
+            return False
         except Exception as e:
             logger.error(f"Error calculating net energy surface: {e}")
             return False
@@ -188,9 +304,6 @@ class EnerscapeRBridge:
         Path
             Path to created INI file
         """
-        if not self.enerscape_available:
-            logger.warning("R not available, creating basic INI file")
-        
         energy_surface_path = Path(energy_surface_path)
         
         if output_dir is None:
@@ -292,19 +405,23 @@ class PythonEnergyCalculator:
         """Initialize Python energy calculator."""
         self.config = config
         
-        # Import Pontzer equations
+        # Import Pontzer equations with fallback handling
+        self.pontzer = None
         try:
             from .pontzer_equations import PontzerEquations
             self.pontzer = PontzerEquations()
         except ImportError:
-            # Handle relative import issues
-            import sys
-            from pathlib import Path
-            src_dir = Path(__file__).parent.parent
-            sys.path.insert(0, str(src_dir))
-            
-            from energyscape.pontzer_equations import PontzerEquations
-            self.pontzer = PontzerEquations()
+            try:
+                # Handle different import paths
+                import sys
+                from pathlib import Path
+                src_dir = Path(__file__).parent.parent
+                sys.path.insert(0, str(src_dir))
+                
+                from energyscape.pontzer_equations import PontzerEquations
+                self.pontzer = PontzerEquations()
+            except ImportError:
+                logger.warning("Could not import PontzerEquations for Python calculator")
     
     def calculate_energy_surface_python(self, dem_array: np.ndarray,
                                       dem_profile: Dict[str, Any],
@@ -329,9 +446,20 @@ class PythonEnergyCalculator:
         bool
             True if calculation successful
         """
+        if not self.pontzer:
+            logger.error("Pontzer equations not available for Python calculator")
+            return False
+        
         try:
-            # Import slope calculation
-            from ..energyscape.slope_calculation import SlopeCalculator
+            # Import slope calculation with fallback handling
+            try:
+                from ..energyscape.slope_calculation import SlopeCalculator
+            except ImportError:
+                try:
+                    from energyscape.slope_calculation import SlopeCalculator
+                except ImportError:
+                    logger.error("Could not import SlopeCalculator")
+                    return False
             
             # Calculate slope
             slope_calc = SlopeCalculator(resolution_m=abs(dem_profile['transform'][0]))

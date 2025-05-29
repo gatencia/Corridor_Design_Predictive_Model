@@ -223,3 +223,19 @@ config/local_config.py
 
 # Ignore all PDF files
 *.pdf
+
+# Specific ignores for STEP 2 data and reports
+STEP 2/data/processed/*
+STEP 2/data/outputs/*
+STEP 2/reports/*.json
+STEP 2/reports/*.png
+STEP 2/reports/*.jpg
+STEP 2/reports/*.jpeg
+STEP 2/reports/*.pdf
+
+# Ensure general large file types are also covered if they appear elsewhere
+# (many of these are already present but good to confirm)
+*.gpq
+
+# Remove specific PDF that was identified if not covered by broader rules
+resources/Journal of Animal Ecology - 2025 - Berti - Energy landscapes direct the movement preferences of elephants.pdf

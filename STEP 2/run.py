@@ -47,6 +47,7 @@ def main():
     step2_dir = Path(__file__).parent.resolve()
     
     scripts_to_run = [
+        "step2_mini_test.py",
         "comprehensive_step2_testing.py",
         "run_gps_processing.py",
         "create_individual_site_maps.py",

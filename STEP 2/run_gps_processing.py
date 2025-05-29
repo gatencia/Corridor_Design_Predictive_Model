@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Optimized GPS Data Processing for STEP 2
-Includes cleanup logic and better file organization.
+GPS Data Processing: 1 AOI per CSV File
+Creates individual AOI for each CSV file regardless of study site.
 """
 
 import sys
@@ -26,15 +26,8 @@ except ImportError as e:
     print(f"❌ Failed to import GPSDataProcessor: {e}")
     sys.exit(1)
 
-try:
-    import matplotlib.pyplot as plt
-    import matplotlib
-    matplotlib.use('Agg')
-except ImportError:
-    plt = None
-
 def cleanup_previous_outputs():
-    """Clean up all previous processing outputs to avoid duplicates."""
+    """Clean up previous outputs."""
     print("🧹 Cleaning up previous outputs...")
     
     cleanup_dirs = [
@@ -54,105 +47,28 @@ def cleanup_previous_outputs():
     print("✅ Cleanup complete")
 
 def setup_directories():
-    """Create organized directory structure."""
+    """Create directory structure."""
     directories = [
-        "data/raw",
-        "data/processed", 
         "data/outputs/individual_aois",
-        "data/outputs/combined_aois",
+        "data/outputs/combined",
         "data/outputs/metadata",
-        "logs",
-        "reports/figures"
+        "logs"
     ]
     
     for dir_path in directories:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
 
-def setup_logging():
-    """Setup logging configuration."""
-    logs_dir = Path("logs")
-    logs_dir.mkdir(exist_ok=True)
-    
-    # Clean old log files (keep only last 5)
-    log_files = sorted(logs_dir.glob("gps_processing_*.log"))
-    if len(log_files) > 5:
-        for old_log in log_files[:-5]:
-            old_log.unlink()
-    
-    log_file = logs_dir / f'gps_processing_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
-    
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler()
-        ]
-    )
-    return logging.getLogger(__name__)
-
-def create_study_site_folders(individual_results, timestamp):
-    """Create organized folders for each study site."""
-    base_dir = Path("data/outputs/individual_aois")
-    
-    # Group by study site
-    sites_data = {}
-    for result in individual_results:
-        site_name = result['study_site']
-        if site_name not in sites_data:
-            sites_data[site_name] = []
-        sites_data[site_name].append(result)
-    
-    # Create folders and organize files
-    organized_results = []
-    
-    for site_name, site_results in sites_data.items():
-        # Create clean folder name
-        clean_name = "".join(c for c in site_name if c.isalnum() or c in (' ', '-', '_')).strip().replace(' ', '_')
-        site_dir = base_dir / clean_name
-        site_dir.mkdir(exist_ok=True)
-        
-        # Take the most recent result for this site (or combine if multiple collars)
-        if len(site_results) == 1:
-            main_result = site_results[0]
-        else:
-            # Combine multiple collars for same site
-            main_result = {
-                'study_site': site_name,
-                'collar_info': f"{len(site_results)} collars",
-                'source_files': [r['source_file'] for r in site_results],
-                'gps_points': sum(r['gps_points'] for r in site_results),
-                'individuals': sum(r['individuals'] for r in site_results),
-                'area_km2': max(r['area_km2'] for r in site_results),  # Use largest AOI
-                'tracking_days': max(r['tracking_days'] for r in site_results)
-            }
-        
-        # Create single AOI file for this site
-        site_aoi_name = f"aoi_{clean_name}_{timestamp}"
-        
-        main_result['organized_files'] = {
-            'site_directory': str(site_dir),
-            'aoi_geojson': str(site_dir / f"{site_aoi_name}.geojson"),
-            'aoi_shapefile': str(site_dir / f"{site_aoi_name}.shp"),
-            'metadata': str(site_dir / f"site_metadata_{timestamp}.json")
-        }
-        
-        organized_results.append(main_result)
-    
-    return organized_results
-
 def main():
-    """Optimized main GPS processing function."""
+    """Process each CSV file individually - 1 AOI per CSV."""
     
-    print("🐘 OPTIMIZED Cameroon Elephant GPS Data Processing")
+    print("🐘 GPS Data Processing: 1 AOI per CSV File")
     print("=" * 60)
     
-    # 1. Cleanup previous outputs first
+    # 1. Cleanup 
     cleanup_previous_outputs()
     
     # 2. Setup
     setup_directories()
-    logger = setup_logging()
     
     # Find GPS data
     data_dir = Path("../GPS_Collar_CSV_Mark")
@@ -160,43 +76,40 @@ def main():
         data_dir = Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/GPS_Collar_CSV_Mark")
     
     if not data_dir.exists():
-        logger.error(f"GPS data directory not found")
+        print(f"❌ GPS data directory not found")
         return
     
     gps_files = list(data_dir.glob("*.csv"))
     
     if not gps_files:
-        logger.error(f"No CSV files found in {data_dir}")
+        print(f"❌ No CSV files found in {data_dir}")
         return
     
     print(f"📁 Found {len(gps_files)} GPS CSV files")
+    print(f"🎯 Will create {len(gps_files)} individual AOIs (1 per CSV)")
     
     try:
         processor = GPSDataProcessor()
         
-        # Process files to identify unique study sites
-        print(f"\n🔄 Processing GPS files to identify unique study sites...")
-        
-        individual_results = []
-        all_aois = []
-        combined_gps_data = []
+        print(f"\n🔄 Processing each CSV file individually...")
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        results = []
+        all_aois = []
         
-        # Process each file but group by study site
-        study_sites_processed = set()
-        
+        # Process EVERY CSV file individually
         for i, file_path in enumerate(gps_files, 1):
             print(f"\n📄 Processing {i}/{len(gps_files)}: {file_path.name}")
             
             try:
+                # Load GPS data
                 gdf = processor.load_gps_data(file_path)
                 
                 if len(gdf) < 3:
                     print(f"   ⚠️  Skipping - insufficient data points ({len(gdf)})")
                     continue
                 
-                # Extract study site info
+                # Extract study site info and collar details
                 filename_parts = file_path.stem.split(" - ")
                 if len(filename_parts) >= 2:
                     study_site = filename_parts[1].replace("(Cameroon)", "").replace("(Nigeria)", "").strip()
@@ -205,146 +118,143 @@ def main():
                     study_site = file_path.stem
                     collar_info = "Unknown"
                 
-                # Skip if we've already processed this study site (avoid duplicates)
-                site_key = study_site.lower().replace(" ", "").replace("_", "")
-                if site_key in study_sites_processed:
-                    print(f"   ℹ️  Study site '{study_site}' already processed, skipping duplicate")
-                    continue
+                # Create unique identifier for this specific CSV
+                unique_id = f"{study_site}_{collar_info}_{i:02d}"
+                clean_unique_id = "".join(c for c in unique_id if c.isalnum() or c in (' ', '-', '_')).strip().replace(' ', '_')
                 
-                study_sites_processed.add(site_key)
+                print(f"   📍 Study site: {study_site}")
+                print(f"   🏷️  Collar/ID: {collar_info}")
+                print(f"   🆔 Unique ID: {clean_unique_id}")
+                print(f"   📊 GPS points: {len(gdf)}")
                 
-                # Generate AOI for this study site
+                # Generate AOI for THIS specific CSV file
                 aoi_gdf = processor.generate_aoi(gdf, buffer_km=5.0, method='convex_hull')
                 
-                # Add metadata
+                # Add metadata specific to this CSV
                 aoi_gdf['study_site'] = study_site
                 aoi_gdf['collar_info'] = collar_info
                 aoi_gdf['source_file'] = file_path.name
+                aoi_gdf['unique_id'] = clean_unique_id
+                aoi_gdf['csv_number'] = i
                 aoi_gdf['gps_points'] = len(gdf)
                 aoi_gdf['tracking_days'] = (gdf['timestamp'].max() - gdf['timestamp'].min()).days
                 
+                area_km2 = float(aoi_gdf['area_km2'].iloc[0])
+                tracking_days = (gdf['timestamp'].max() - gdf['timestamp'].min()).days
+                
+                print(f"   ✅ AOI created: {area_km2:.1f} km²")
+                
+                # Create dedicated folder for this AOI
+                aoi_base_dir = Path("data/outputs/individual_aois")
+                aoi_folder = aoi_base_dir / clean_unique_id
+                aoi_folder.mkdir(parents=True, exist_ok=True)
+                
+                # Save AOI files in dedicated folder
+                aoi_geojson = aoi_folder / f"aoi_{clean_unique_id}_{timestamp}.geojson"
+                aoi_shapefile = aoi_folder / f"aoi_{clean_unique_id}_{timestamp}.shp"
+                metadata_file = aoi_folder / f"metadata_{clean_unique_id}_{timestamp}.json"
+                
+                aoi_gdf.to_file(aoi_geojson, driver='GeoJSON')
+                aoi_gdf.to_file(aoi_shapefile)
+                
+                print(f"   📁 Created folder: {aoi_folder.name}/")
+                print(f"   💾 Saved: {aoi_geojson.name}")
+                
+                # Store result info
                 result_info = {
+                    'csv_number': i,
                     'study_site': study_site,
                     'collar_info': collar_info,
+                    'unique_id': clean_unique_id,
                     'source_file': file_path.name,
                     'gps_points': len(gdf),
                     'individuals': int(gdf['individual-local-identifier'].nunique()),
-                    'area_km2': float(aoi_gdf['area_km2'].iloc[0]),
-                    'tracking_days': (gdf['timestamp'].max() - gdf['timestamp'].min()).days
+                    'area_km2': area_km2,
+                    'tracking_days': tracking_days,
+                    'aoi_folder': str(aoi_folder),
+                    'aoi_geojson': str(aoi_geojson),
+                    'aoi_shapefile': str(aoi_shapefile),
+                    'metadata_file': str(metadata_file)
                 }
                 
-                individual_results.append(result_info)
-                all_aois.append(aoi_gdf)
-                combined_gps_data.append(gdf)
+                # Save metadata in the folder
+                with open(metadata_file, 'w') as f:
+                    json.dump(result_info, f, indent=2, default=str)
                 
-                print(f"   ✅ {study_site}: {len(gdf)} points → {aoi_gdf['area_km2'].iloc[0]:.1f} km² AOI")
+                print(f"   📄 Metadata: {metadata_file.name}")
+                
+                results.append(result_info)
+                all_aois.append(aoi_gdf)
                 
             except Exception as e:
-                logger.error(f"Failed to process {file_path}: {e}")
+                print(f"   ❌ Failed to process {file_path.name}: {e}")
                 continue
         
-        if not individual_results:
-            print("❌ No unique study sites were successfully processed")
+        if not results:
+            print("❌ No CSV files were successfully processed")
             return
         
-        print(f"\n✅ Processed {len(individual_results)} unique study sites")
+        print(f"\n✅ Successfully processed {len(results)} CSV files")
+        print(f"📄 Created {len(results)} individual AOIs")
         
-        # Create organized folder structure
-        organized_results = create_study_site_folders(individual_results, timestamp)
-        
-        # Save individual AOI files in organized structure
-        for i, (result, aoi_gdf) in enumerate(zip(organized_results, all_aois)):
-            try:
-                files = result['organized_files']
-                
-                # Save to organized location
-                aoi_gdf.to_file(files['aoi_geojson'], driver='GeoJSON')
-                aoi_gdf.to_file(files['aoi_shapefile'])
-                
-                # Save metadata
-                with open(files['metadata'], 'w') as f:
-                    json.dump(result, f, indent=2, default=str)
-                
-                print(f"   📁 Organized: {result['study_site']} → {Path(files['site_directory']).name}/")
-                
-            except Exception as e:
-                logger.error(f"Failed to organize {result['study_site']}: {e}")
-        
-        # Create combined files
-        print(f"\n📊 Creating combined datasets...")
-        
-        if len(combined_gps_data) > 0:
-            combined_gdf = pd.concat(combined_gps_data, ignore_index=True)
-            combined_gdf = combined_gdf.sort_values(['individual-local-identifier', 'timestamp'])
-            combined_gdf = combined_gdf.drop_duplicates(
-                subset=['individual-local-identifier', 'timestamp', 'location-lat', 'location-long'], 
-                keep='first'
-            )
-        
-        if len(all_aois) > 0:
+        # Create combined AOI file (all AOIs together)
+        if all_aois:
+            print(f"\n📊 Creating combined AOI file...")
             combined_aoi = pd.concat([aoi.to_crs('EPSG:4326') for aoi in all_aois], ignore_index=True)
             
-            # Save combined AOI (single file)
-            combined_dir = Path("data/outputs/combined_aois")
-            combined_aoi_file = combined_dir / f"all_study_sites_combined_{timestamp}.geojson"
+            combined_dir = Path("data/outputs/combined")
+            combined_aoi_file = combined_dir / f"all_aois_combined_{timestamp}.geojson"
             combined_aoi.to_file(combined_aoi_file, driver='GeoJSON')
+            print(f"   💾 Combined AOI: {combined_aoi_file.name}")
         
-        # Export combined results
-        if len(combined_gps_data) > 0 and len(all_aois) > 0:
-            processor.export_results(
-                combined_gdf, 
-                combined_aoi.iloc[[0]],
-                output_dir="data/outputs/combined_aois",
-                study_name="cameroon_elephants_optimized"
-            )
-        
-        # Create processing summary
+        # Create detailed summary
         summary = {
             'processing_timestamp': timestamp,
-            'unique_study_sites_processed': len(organized_results),
-            'total_gps_points': sum(r['gps_points'] for r in organized_results),
-            'total_area_km2': sum(r['area_km2'] for r in organized_results),
-            'optimization_notes': [
-                "Duplicates removed during processing",
-                "Files organized by study site",
-                "Single AOI per study site",
-                "Ready for efficient STEP 2.5 processing"
-            ],
-            'study_sites': organized_results,
+            'processing_type': '1_aoi_per_csv_file',
+            'total_csv_files': len(gps_files),
+            'successfully_processed': len(results),
+            'failed_files': len(gps_files) - len(results),
+            'total_gps_points': sum(r['gps_points'] for r in results),
+            'total_area_km2': sum(r['area_km2'] for r in results),
+            'individual_results': results,
             'files_structure': {
-                'individual_aois': "data/outputs/individual_aois/{site_name}/",
-                'combined_aois': "data/outputs/combined_aois/",
-                'metadata': "data/outputs/metadata/"
+                'individual_aois': "data/outputs/individual_aois/{unique_id}/",
+                'combined_aoi': "data/outputs/combined/",
+                'metadata': "data/outputs/metadata/",
+                'folder_organization': "Each AOI has dedicated folder with GeoJSON, Shapefile, and metadata"
             }
         }
         
         summary_file = Path("data/outputs/metadata") / f"processing_summary_{timestamp}.json"
-        summary_file.parent.mkdir(exist_ok=True)
-        
         with open(summary_file, 'w') as f:
             json.dump(summary, f, indent=2, default=str)
         
-        print("✅ Optimized GPS processing completed!")
-        
-        # Print organized summary
-        print(f"\n📊 OPTIMIZED Processing Summary")
+        print(f"\n📋 PROCESSING SUMMARY")
         print("=" * 50)
-        print(f"Unique study sites: {len(organized_results)}")
-        print(f"Total GPS fixes: {summary['total_gps_points']:,}")
+        print(f"CSV files found: {len(gps_files)}")
+        print(f"AOIs created: {len(results)}")
+        print(f"Total GPS points: {summary['total_gps_points']:,}")
         print(f"Total study area: {summary['total_area_km2']:,.1f} km²")
-        print(f"Organized structure: data/outputs/individual_aois/")
         
-        print(f"\nStudy Sites (Deduplicated):")
-        for result in sorted(organized_results, key=lambda x: x['area_km2'], reverse=True):
-            print(f"  📍 {result['study_site']}: {result['area_km2']:,.1f} km² ({result['gps_points']:,} points)")
+        print(f"\n📄 Individual AOI Folders Created:")
+        for result in results:
+            folder_name = Path(result['aoi_folder']).name
+            print(f"  {result['csv_number']:2d}. {folder_name}/ → {result['area_km2']:,.1f} km² ({result['gps_points']:,} points)")
         
-        print(f"\n🚀 Ready for optimized STEP 2.5 processing!")
-        print(f"Each study site has dedicated folder with single AOI file")
+        print(f"\n📁 Organized structure: data/outputs/individual_aois/")
+        print(f"   Each AOI has its own dedicated folder with:")
+        print(f"   • GeoJSON file")
+        print(f"   • Shapefile")  
+        print(f"   • Metadata JSON")
+        print(f"📄 Summary: {summary_file}")
         
-        return organized_results
+        print(f"\n🚀 Ready for optimized STEP 2.5!")
+        print(f"Each CSV file has its own organized folder structure")
+        
+        return results
         
     except Exception as e:
-        logger.error(f"GPS processing failed: {e}")
+        print(f"\n❌ Processing failed: {e}")
         import traceback
         traceback.print_exc()
 

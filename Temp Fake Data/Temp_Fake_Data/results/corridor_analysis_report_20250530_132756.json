@@ -1,0 +1,100 @@
+{
+  "analysis_metadata": {
+    "timestamp": "20250530_132756",
+    "analyst": "Ecological AI Research Assistant",
+    "study_region": "Cameroon Forest Elephant Habitat",
+    "analysis_type": "Corridor Prediction Model Comparison"
+  },
+  "data_summary": {
+    "gps_points": 83,
+    "study_duration_days": 196,
+    "raster_resolution_m": 100,
+    "study_area_km2": 9713.460000000003,
+    "environmental_layers": 11
+  },
+  "model_parameters": {
+    "energyscape": {
+      "elephant_mass_kg": 4000,
+      "factors": [
+        "elevation",
+        "slope",
+        "vegetation",
+        "water_availability"
+      ],
+      "energy_cost_calculation": "terrain-based metabolic cost"
+    },
+    "traditional": {
+      "factors": [
+        "land_cover",
+        "human_pressure",
+        "slope",
+        "water",
+        "vegetation",
+        "risk"
+      ],
+      "resistance_calculation": "weighted multi-factor resistance"
+    }
+  },
+  "validation_results": {
+    "energyscape": {
+      "mean_corridor_value": 0.27467048327329685,
+      "corridor_area_km2": 971.3500000000001,
+      "gps_coverage_percentage": 71.08433734939759,
+      "mean_distance_to_corridor_m": 0.0,
+      "median_distance_to_corridor_m": 0.0,
+      "mean_resistance_at_gps": 0.6731488118888819,
+      "total_gps_points": 83
+    },
+    "traditional": {
+      "mean_corridor_value": 0.31732113683081276,
+      "corridor_area_km2": 971.3500000000001,
+      "gps_coverage_percentage": 77.10843373493977,
+      "mean_distance_to_corridor_m": 0.0,
+      "median_distance_to_corridor_m": 0.0,
+      "mean_resistance_at_gps": 0.30521805878582714,
+      "total_gps_points": 83
+    },
+    "comparison": {
+      "energyscape_score": 333.6618379522558,
+      "traditional_score": 333.6961351580601,
+      "better_model": "Traditional",
+      "score_difference": 0.034297205804307396
+    }
+  },
+  "conclusions": {
+    "better_model": "Traditional",
+    "performance_difference": "0.034",
+    "key_findings": [
+      "GPS Coverage: Energyscape 71.1% vs Traditional 77.1%",
+      "Distance Accuracy: Energyscape 0m vs Traditional 0m",
+      "The Traditional model shows superior performance for this dataset"
+    ]
+  },
+  "files_generated": {
+    "raster_layers": [
+      "Temp_Fake_Data/rasters/anthropogenic_risk.tif",
+      "Temp_Fake_Data/rasters/human_pressure.tif",
+      "Temp_Fake_Data/rasters/water_availability.tif",
+      "Temp_Fake_Data/rasters/slope.tif",
+      "Temp_Fake_Data/rasters/traditional_corridors.tif",
+      "Temp_Fake_Data/rasters/land_cover.tif",
+      "Temp_Fake_Data/rasters/traditional_resistance.tif",
+      "Temp_Fake_Data/rasters/resources.tif",
+      "Temp_Fake_Data/rasters/energyscape_resistance.tif",
+      "Temp_Fake_Data/rasters/rainfall.tif",
+      "Temp_Fake_Data/rasters/energyscape_corridors.tif",
+      "Temp_Fake_Data/rasters/ndvi.tif",
+      "Temp_Fake_Data/rasters/dem.tif"
+    ],
+    "corridor_predictions": [],
+    "visualizations": [
+      "Temp_Fake_Data/visualizations/summary_dashboard.png",
+      "Temp_Fake_Data/visualizations/raster_layers_overview.png",
+      "Temp_Fake_Data/visualizations/corridor_comparison.png",
+      "Temp_Fake_Data/visualizations/validation_analysis.png"
+    ],
+    "results": [
+      "Temp_Fake_Data/results/validation_results.json"
+    ]
+  }
+}

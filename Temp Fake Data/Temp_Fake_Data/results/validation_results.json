@@ -1,0 +1,26 @@
+{
+  "energyscape": {
+    "mean_corridor_value": 0.27467048327329685,
+    "corridor_area_km2": 971.3500000000001,
+    "gps_coverage_percentage": 71.08433734939759,
+    "mean_distance_to_corridor_m": 0.0,
+    "median_distance_to_corridor_m": 0.0,
+    "mean_resistance_at_gps": 0.6731488118888819,
+    "total_gps_points": 83
+  },
+  "traditional": {
+    "mean_corridor_value": 0.31732113683081276,
+    "corridor_area_km2": 971.3500000000001,
+    "gps_coverage_percentage": 77.10843373493977,
+    "mean_distance_to_corridor_m": 0.0,
+    "median_distance_to_corridor_m": 0.0,
+    "mean_resistance_at_gps": 0.30521805878582714,
+    "total_gps_points": 83
+  },
+  "comparison": {
+    "energyscape_score": 333.6618379522558,
+    "traditional_score": 333.6961351580601,
+    "better_model": "Traditional",
+    "score_difference": 0.034297205804307396
+  }
+}

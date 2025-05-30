@@ -1,0 +1,26 @@
+ELEPHANT CORRIDOR PREDICTION ANALYSIS - MODEL COMPARISON SUMMARY
+================================================================================
+
+STUDY OVERVIEW:
+• GPS Points Analyzed: 83
+• Study Duration: 196 days
+• Analysis Resolution: 100m
+• Environmental Layers: 11
+
+MODEL PERFORMANCE COMPARISON:
+----------------------------------------
+Metric                    Energyscape     Traditional    
+----------------------------------------
+GPS Coverage (%)          71.1            77.1           
+Mean Distance (m)         0               0              
+Corridor Area (km²)       971.4           971.4          
+Mean Corridor Value       0.275           0.317          
+
+OVERALL PERFORMANCE:
+• Best Model: Traditional
+• Performance Difference: 0.034
+
+KEY FINDINGS:
+• GPS Coverage: Energyscape 71.1% vs Traditional 77.1%
+• Distance Accuracy: Energyscape 0m vs Traditional 0m
+• The Traditional model shows superior performance for this dataset

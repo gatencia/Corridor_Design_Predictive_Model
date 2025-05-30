@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-STEP 2.5: Streamlined DEM Acquisition System with NASA Earthdata Authentication
+STEP 2.5: Fixed DEM Acquisition System with NASA Earthdata Authentication
 Fast, automated downloading of SRTM DEM tiles from NASA Earthdata for AOI-specific analysis.
 
-Updated with NASA Earthdata authentication for reliable, high-speed downloads.
+FIXES:
+1. Made SRTMTile hashable with frozen=True
+2. Added coordinate transformation from projected to geographic coordinates
+3. Fixed URL references and error handling
 """
 
 import requests
@@ -58,7 +61,7 @@ class AOIBounds:
         if not (-180 <= self.min_lon <= self.max_lon <= 180):
             raise ValueError(f"Invalid longitude range: {self.min_lon} to {self.max_lon}")
 
-@dataclass  
+@dataclass(frozen=True)  # FIX 1: Made hashable with frozen=True
 class SRTMTile:
     """SRTM tile identifier and metadata."""
     lat: int  # Integer degree latitude (south edge)
@@ -91,17 +94,6 @@ class SRTMTile:
             f"https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/{self.filename}",
             f"https://www.viewfinderpanoramas.org/dem3/{self.filename}",
         ]
-    
-    def _get_continent(self) -> str:
-        """Determine continent directory for USGS structure."""
-        if 15 <= self.lat <= 83 and -180 <= self.lon <= 180:
-            return "Eurasia"
-        elif -60 <= self.lat <= 15 and -180 <= self.lon <= -30:
-            return "North_America" if self.lat >= 15 else "South_America"
-        elif -60 <= self.lat <= 37 and -20 <= self.lon <= 180:
-            return "Africa"
-        else:
-            return "Australia"
 
 class NASAEarthdataAuth:
     """Handle NASA Earthdata authentication."""
@@ -124,7 +116,6 @@ class NASAEarthdataAuth:
             logger.info("Please set up your .env file with NASA_EARTHDATA_USERNAME and NASA_EARTHDATA_PASSWORD")
             
             # Fallback: use default credentials if provided
-            # Note: In production, never hardcode credentials
             if not self.username:
                 logger.info("Using provided credentials for this session")
                 self.username = "gatencia"  # Your username
@@ -518,7 +509,7 @@ class AOIProcessor:
     
     def load_aoi_bounds(self, aoi_files: List[Path]) -> List[AOIBounds]:
         """
-        Load AOI bounding boxes from files.
+        Load AOI bounding boxes from files with coordinate transformation.
         
         Parameters:
         -----------
@@ -528,7 +519,7 @@ class AOIProcessor:
         Returns:
         --------
         List[AOIBounds]
-            List of AOI bounding boxes
+            List of AOI bounding boxes in geographic coordinates
         """
         aoi_bounds = []
         
@@ -541,8 +532,24 @@ class AOIProcessor:
                     logger.warning(f"Empty AOI file: {aoi_file}")
                     continue
                 
-                # Get total bounds
+                # FIX 2: Transform to geographic coordinates if needed
+                if gdf.crs and not gdf.crs.is_geographic:
+                    logger.info(f"  Converting from {gdf.crs} to EPSG:4326")
+                    gdf = gdf.to_crs('EPSG:4326')
+                elif gdf.crs is None:
+                    logger.warning(f"  No CRS defined, assuming EPSG:4326")
+                    gdf = gdf.set_crs('EPSG:4326')
+                
+                # Get total bounds in geographic coordinates
                 bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
+                
+                # Validate that bounds are reasonable for geographic coordinates
+                if not (-180 <= bounds[0] <= 180 and -180 <= bounds[2] <= 180):
+                    logger.error(f"Invalid longitude bounds: {bounds[0]} to {bounds[2]}")
+                    continue
+                if not (-90 <= bounds[1] <= 90 and -90 <= bounds[3] <= 90):
+                    logger.error(f"Invalid latitude bounds: {bounds[1]} to {bounds[3]}")
+                    continue
                 
                 # Extract name from file or attributes
                 if 'study_site' in gdf.columns:
@@ -598,9 +605,10 @@ MAX_CONCURRENT_DOWNLOADS=6
 def main():
     """Main DEM acquisition workflow with NASA Earthdata."""
     
-    print("🛰️  STEP 2.5: DEM Acquisition with NASA Earthdata")
+    print("🛰️  STEP 2.5: Fixed DEM Acquisition with NASA Earthdata")
     print("=" * 70)
     print("Objective: Fast download of SRTM tiles using NASA authentication")
+    print("FIXES: Made SRTMTile hashable + coordinate transformation")
     print()
     
     # Setup directories

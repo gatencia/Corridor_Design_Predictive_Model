@@ -1,5 +1,5 @@
 """
-Quick test script for DEM acquisition system.
+Fixed test script for DEM acquisition system.
 Tests tile calculation and download functionality.
 """
 
@@ -36,7 +36,7 @@ def test_tile_calculation():
     
     print(f"   Test AOI requires {len(tiles)} tiles:")
     for tile in sorted(tiles, key=lambda t: (t.lat, t.lon)):
-        print(f"     {tile.filename} -> {tile.s3_url}")
+        print(f"     {tile.filename} -> {tile.nasa_url}")  # FIX: Changed from s3_url to nasa_url
     
     # Verify tile naming
     expected_tiles = {"N08E013.hgt", "N08E014.hgt", "N09E013.hgt", "N09E014.hgt"}  # With 1km buffer
@@ -74,7 +74,7 @@ def test_single_tile_download():
         )
         
         print(f"   Attempting to download: {test_tile.filename}")
-        print(f"   From: {test_tile.s3_url}")
+        print(f"   From: {test_tile.nasa_url}")  # FIX: Changed from s3_url to nasa_url
         
         success = downloader._download_tile_with_retry(test_tile)
         
@@ -135,12 +135,43 @@ def test_aoi_discovery():
         print(f"   ❌ Error during AOI discovery: {e}")
         return False
 
+def test_dataclass_hashability():
+    """Test that SRTMTile is properly hashable."""
+    print("🧪 Testing dataclass hashability...")
+    
+    try:
+        from step25_dem_downloader import SRTMTile
+        
+        # Create test tiles
+        tile1 = SRTMTile(lat=8, lon=13)
+        tile2 = SRTMTile(lat=8, lon=14)
+        tile3 = SRTMTile(lat=8, lon=13)  # Same as tile1
+        
+        # Test that they can be added to a set
+        tile_set = {tile1, tile2, tile3}
+        
+        if len(tile_set) == 2:  # tile1 and tile3 should be the same
+            print("   ✅ SRTMTile is properly hashable")
+            print(f"     Set contains: {[t.filename for t in tile_set]}")
+            return True
+        else:
+            print(f"   ❌ Expected 2 unique tiles, got {len(tile_set)}")
+            return False
+            
+    except TypeError as e:
+        print(f"   ❌ SRTMTile is not hashable: {e}")
+        return False
+    except Exception as e:
+        print(f"   ❌ Error testing hashability: {e}")
+        return False
+
 def run_quick_test():
     """Run all quick tests."""
-    print("🚀 Step 2.5 DEM Acquisition - Quick Test Suite")
+    print("🚀 Step 2.5 DEM Acquisition - Fixed Test Suite")
     print("=" * 60)
     
     tests = [
+        ("Dataclass Hashability", test_dataclass_hashability),
         ("Tile Calculation", test_tile_calculation),
         ("AOI Discovery", test_aoi_discovery),
         ("Single Tile Download", test_single_tile_download)
@@ -164,7 +195,7 @@ def run_quick_test():
     print(f"\n📊 Test Summary: {passed}/{total} tests passed")
     
     if passed == total:
-        print("🎉 All tests passed! DEM acquisition system is ready.")
+        print("🎉 All tests passed! Fixed DEM acquisition system is ready.")
         return True
     else:
         print("⚠️  Some tests failed. Check issues above.")
@@ -185,17 +216,22 @@ if __name__ == "__main__":
         sys.exit(0 if success else 1)
     
     elif args.config:
-        print("Step 2.5 DEM Acquisition Configuration:")
-        print("=" * 40)
-        for attr_name in dir(DEMConfig):
-            if not attr_name.startswith('_'):
-                value = getattr(DEMConfig, attr_name)
-                print(f"{attr_name}: {value}")
+        # Try to import config if available
+        try:
+            from config import DEMConfig
+            print("Step 2.5 DEM Acquisition Configuration:")
+            print("=" * 40)
+            for attr_name in dir(DEMConfig):
+                if not attr_name.startswith('_'):
+                    value = getattr(DEMConfig, attr_name)
+                    print(f"{attr_name}: {value}")
+        except ImportError:
+            print("Configuration module not available")
     
     else:
-        print("Step 2.5 DEM Acquisition System")
+        print("Step 2.5 DEM Acquisition System - Fixed Version")
         print("Usage:")
-        print("  python step25_config.py --test     # Run test suite")
-        print("  python step25_config.py --config   # Show configuration")
+        print("  python test_system.py --test     # Run test suite")
+        print("  python test_system.py --config   # Show configuration")
         print("\nTo run full DEM acquisition:")
         print("  python step25_dem_downloader.py")

@@ -127,6 +127,11 @@ def find_dem_data() -> dict:
     print("\n🗻 Searching for DEM data...")
     
     dem_search_dirs = [
+        # Step 2.5 robust DEM downloader outputs (PRIORITY)
+        Path("../STEP 2.5/outputs/robust_dems"),
+        Path("../STEP 2.5/outputs/aoi_dems"), 
+        Path("../STEP 2.5/outputs/aoi_specific_dems"),
+        # Traditional locations
         Path("data/raw/dem"),
         Path("../data/raw/dem"),
         Path("/tmp/dem")  # Common download location
@@ -151,11 +156,16 @@ def find_dem_data() -> dict:
                 dem_info['files'].extend([str(f) for f in dem_files])
                 print(f"   ✅ DEM files found in: {dem_dir}")
                 print(f"   📊 Files: {len(dem_files)}")
+                for f in dem_files[:3]:  # Show first 3 files
+                    print(f"     • {f.name}")
+                if len(dem_files) > 3:
+                    print(f"     ... and {len(dem_files) - 3} more files")
     
     if not dem_info['found']:
         print("   ⚠️  No DEM files found in search directories")
         print("   You may need to download DEM data for your study area")
         print("   Suggested sources: NASADEM, SRTM, or ASTER GDEM")
+        print("   Or run Step 2.5: cd '../STEP 2.5' && python robust_dem_downloader.py")
     
     return dem_info
 
@@ -175,7 +185,15 @@ def run_energy_calculations(args) -> dict:
         
         # Print configuration summary
         if processor.config:
-            processor.config_manager.print_summary()
+            try:
+                if hasattr(processor, 'config_manager') and processor.config_manager:
+                    processor.config_manager.print_summary()
+                else:
+                    print("⚡ EnergyScape Configuration Summary")
+                    print("=" * 60)
+                    print("Using default configuration parameters")
+            except AttributeError:
+                print("⚡ EnergyScape processor initialized with default configuration")
         
         # Discover Step 2 AOIs
         aoi_files = processor.process_step2_aoi()

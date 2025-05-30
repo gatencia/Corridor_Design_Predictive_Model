@@ -132,7 +132,7 @@ class EnergyScapeProcessor:
         self.processing_results = {}
         
         logger.info("EnergyScape processor initialized")
-    
+
     def find_step2_aoi_outputs(self) -> List[Dict[str, Any]]:
         """
         Find Step 2 AOI outputs in the actual project structure.
@@ -144,13 +144,15 @@ class EnergyScapeProcessor:
         """
         logger.info("Searching for Step 2 AOI outputs...")
         
-        # Define possible Step 2 output directories based on your structure
-        project_root = Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research")
+        # Define possible Step 2 output directories based on actual structure
+        current_dir = Path(__file__).parent.parent.parent  # Go up to STEP 3 root
+        project_root = current_dir.parent  # Go up to project root
         
         step2_output_paths = [
             project_root / "STEP 2" / "data" / "outputs",
             project_root / "STEP 2" / "outputs", 
-            project_root / "STEP 2" / "data" / "processed"
+            project_root / "STEP 2" / "data" / "processed",
+            current_dir.parent / "STEP 2" / "data" / "outputs"  # Alternative path
         ]
         
         aoi_files = []
@@ -162,7 +164,7 @@ class EnergyScapeProcessor:
                 
             logger.info(f"Searching in: {step2_path}")
             
-            # Look for AOI files (GeoJSON and Shapefile)
+            # Look for AOI files (GeoJSON and Shapefile) - including in subdirectories
             patterns = ["*aoi*.geojson", "*aoi*.shp", "*AOI*.geojson", "*AOI*.shp"]
             
             for pattern in patterns:
@@ -230,9 +232,12 @@ class EnergyScapeProcessor:
             Path to suitable DEM file, or None if not found
         """
         if dem_search_dirs is None:
-            # Default DEM search locations
-            step3_root = Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 3")
+            # Default DEM search locations using relative paths
+            step3_root = Path(__file__).parent.parent.parent  # Go up to STEP 3 root
+            project_root = step3_root.parent  # Go up to project root
             dem_search_dirs = [
+                project_root / "STEP 2.5" / "outputs" / "robust_dems",
+                project_root / "STEP 2.5" / "outputs" / "aoi_dems",
                 step3_root / "data" / "raw" / "dem",
                 Path("/tmp/dem"),  # Common download location
                 Path.home() / "Downloads"  # User downloads
@@ -374,7 +379,7 @@ class EnergyScapeProcessor:
         
         # Setup output directory
         if output_dir is None:
-            step3_root = Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 3")
+            step3_root = Path(__file__).parent.parent.parent  # Go up to STEP 3 root
             output_dir = step3_root / "data" / "processed" / "energy_surfaces"
         
         output_dir = Path(output_dir)

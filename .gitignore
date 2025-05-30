@@ -239,3 +239,47 @@ STEP 2/reports/*.pdf
 
 # Remove specific PDF that was identified if not covered by broader rules
 resources/Journal of Animal Ecology - 2025 - Berti - Energy landscapes direct the movement preferences of elephants.pdf
+
+# Large files and installers
+*.sh
+*.exe
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.zip
+*.tar.gz
+*.tgz
+
+# Python virtual environments
+venv/
+env/
+.env/
+*/.env/
+*/**/.env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files - add specific patterns if needed
+# e.g., data/raw/
+# e.g., *.csv
+
+# Output files - add specific patterns if needed
+# e.g., outputs/
+# e.g., reports/
+
+# Logs
+*.log
+logs/
+
+# Specific to this project
+STEP 1/Miniconda3-latest-Linux-x86_64.sh

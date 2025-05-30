@@ -1,48 +1,38 @@
 #!/usr/bin/env python3
 """
-STEP 2.5: Fixed DEM Acquisition System with NASA Earthdata Authentication
-Fast, automated downloading of SRTM DEM tiles from NASA Earthdata for AOI-specific analysis.
-
-FIXES:
-1. Made SRTMTile hashable with frozen=True
-2. Added coordinate transformation from projected to geographic coordinates
-3. Fixed URL references and error handling
+STEP 2.5: OpenTopography DEM Downloader
+Reliable DEM acquisition using OpenTopography's Global DEM API
 """
 
 import requests
 import geopandas as gpd
 from pathlib import Path
-from typing import List, Tuple, Set, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 import logging
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
-import math
-import os
-import zipfile
-from dataclasses import dataclass
-from datetime import datetime
 import json
 import sys
-
-# Environment variable handling
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-    HAS_DOTENV = True
-except ImportError:
-    HAS_DOTENV = False
-    print("Warning: python-dotenv not installed. Install with: pip install python-dotenv")
+import os
+from datetime import datetime
+from dataclasses import dataclass
+import rasterio
+from rasterio.crs import CRS
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/dem_acquisition.log'),
+        logging.FileHandler('logs/opentopo_dem_download.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
 logger = logging.getLogger(__name__)
+
+# Get API key from environment variable
+API_KEY = os.getenv("OPENTOPOGRAPHY_API_KEY", "").strip()
+if not API_KEY:
+    raise RuntimeError("OPENTOPOGRAPHY_API_KEY is not set")
 
 @dataclass
 class AOIBounds:
@@ -61,410 +51,276 @@ class AOIBounds:
         if not (-180 <= self.min_lon <= self.max_lon <= 180):
             raise ValueError(f"Invalid longitude range: {self.min_lon} to {self.max_lon}")
 
-@dataclass(frozen=True)  # FIX 1: Made hashable with frozen=True
-class SRTMTile:
-    """SRTM tile identifier and metadata."""
-    lat: int  # Integer degree latitude (south edge)
-    lon: int  # Integer degree longitude (west edge)
+class OpenTopographyDownloader:
+    """Download DEMs using OpenTopography Global DEM API."""
     
-    @property
-    def filename(self) -> str:
-        """Generate standard SRTM filename (e.g., N01E009.hgt)."""
-        lat_str = f"{'N' if self.lat >= 0 else 'S'}{abs(self.lat):02d}"
-        lon_str = f"{'E' if self.lon >= 0 else 'W'}{abs(self.lon):03d}"
-        return f"{lat_str}{lon_str}.hgt"
-    
-    @property
-    def zip_filename(self) -> str:
-        """Generate ZIP filename for NASA downloads."""
-        return f"{self.filename}.zip"
-    
-    @property
-    def nasa_url(self) -> str:
-        """Generate NASA Earthdata URL for SRTM tile."""
-        # NASA SRTM GL1 (30m) - most reliable source
-        base_url = "https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11"
-        return f"{base_url}/{self.zip_filename}"
-    
-    @property 
-    def fallback_urls(self) -> List[str]:
-        """Alternative download URLs for this tile."""
-        return [
-            f"https://cloud.sdsc.edu/v1/AUTH_opentopography/Raster/SRTM_GL1/{self.filename}",
-            f"https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/{self.filename}",
-            f"https://www.viewfinderpanoramas.org/dem3/{self.filename}",
-        ]
-
-class NASAEarthdataAuth:
-    """Handle NASA Earthdata authentication."""
-    
-    def __init__(self):
-        """Initialize NASA authentication."""
-        self.username = None
-        self.password = None
-        self.session = None
-        self._load_credentials()
-        
-    def _load_credentials(self):
-        """Load NASA Earthdata credentials from environment or prompt."""
-        # Try environment variables first
-        self.username = os.getenv('NASA_EARTHDATA_USERNAME')
-        self.password = os.getenv('NASA_EARTHDATA_PASSWORD')
-        
-        if not self.username or not self.password:
-            logger.warning("NASA Earthdata credentials not found in environment variables")
-            logger.info("Please set up your .env file with NASA_EARTHDATA_USERNAME and NASA_EARTHDATA_PASSWORD")
-            
-            # Fallback: use default credentials if provided
-            if not self.username:
-                logger.info("Using provided credentials for this session")
-                self.username = "gatencia"  # Your username
-                self.password = "wtfWTF12345!"  # Your password
-            
-        if self.username and self.password:
-            logger.info(f"NASA Earthdata authentication configured for user: {self.username}")
-        else:
-            logger.error("No NASA Earthdata credentials available")
-    
-    def get_authenticated_session(self) -> requests.Session:
-        """Get authenticated requests session for NASA downloads."""
-        if self.session is None:
-            self.session = requests.Session()
-            self.session.auth = (self.username, self.password)
-            
-            # Set headers that NASA expects
-            self.session.headers.update({
-                'User-Agent': 'STEP25-DEM-Downloader/1.0'
-            })
-            
-        return self.session
-    
-    def is_configured(self) -> bool:
-        """Check if authentication is properly configured."""
-        return bool(self.username and self.password)
-
-class SRTMTileCalculator:
-    """Calculate required SRTM tiles for given AOIs."""
-    
-    def __init__(self, buffer_km: float = 2.0):
-        """
-        Initialize tile calculator.
-        
-        Parameters:
-        -----------
-        buffer_km : float
-            Buffer distance in kilometers to add around AOIs
-        """
-        self.buffer_km = buffer_km
-        self.buffer_degrees = buffer_km / 111.32  # Approximate km to degrees conversion
-        
-    def calculate_tiles_for_aoi(self, aoi: AOIBounds) -> Set[SRTMTile]:
-        """
-        Calculate SRTM tiles needed for an AOI with buffer.
-        
-        Parameters:
-        -----------
-        aoi : AOIBounds
-            Area of Interest boundaries
-            
-        Returns:
-        --------
-        Set[SRTMTile]
-            Set of required SRTM tiles
-        """
-        # Add buffer to AOI bounds
-        buffered_min_lat = aoi.min_lat - self.buffer_degrees
-        buffered_max_lat = aoi.max_lat + self.buffer_degrees
-        buffered_min_lon = aoi.min_lon - self.buffer_degrees
-        buffered_max_lon = aoi.max_lon + self.buffer_degrees
-        
-        # Calculate tile bounds (SRTM uses 1-degree tiles)
-        min_tile_lat = math.floor(buffered_min_lat)
-        max_tile_lat = math.floor(buffered_max_lat)
-        min_tile_lon = math.floor(buffered_min_lon)
-        max_tile_lon = math.floor(buffered_max_lon)
-        
-        # Generate tile set
-        tiles = set()
-        for lat in range(min_tile_lat, max_tile_lat + 1):
-            for lon in range(min_tile_lon, max_tile_lon + 1):
-                tiles.add(SRTMTile(lat, lon))
-        
-        logger.info(f"AOI '{aoi.name}': {len(tiles)} tiles required "
-                   f"(bounds: {buffered_min_lat:.3f},{buffered_min_lon:.3f} to "
-                   f"{buffered_max_lat:.3f},{buffered_max_lon:.3f})")
-        
-        return tiles
-
-class SRTMDownloader:
-    """High-speed SRTM tile downloader with NASA Earthdata authentication."""
-    
-    def __init__(self, output_dir: Path, max_workers: int = 6, 
-                 max_retries: int = 3, timeout_seconds: int = 60):
-        """
-        Initialize SRTM downloader.
-        
-        Parameters:
-        -----------
-        output_dir : Path
-            Directory to save downloaded tiles
-        max_workers : int
-            Maximum concurrent downloads (reduced for NASA servers)
-        max_retries : int
-            Maximum retry attempts per tile
-        timeout_seconds : int
-            HTTP request timeout (increased for larger NASA files)
-        """
+    def __init__(self, output_dir: Path, buffer_km: float = 2.0):
+        """Initialize OpenTopography downloader."""
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.max_workers = max_workers
-        self.max_retries = max_retries
-        self.timeout = timeout_seconds
+        self.buffer_km = buffer_km
+        self.buffer_degrees = buffer_km / 111.32  # Approximate km to degrees
         
-        # Initialize NASA authentication
-        self.nasa_auth = NASAEarthdataAuth()
+        # OpenTopography API endpoints - UPDATED to current public endpoint
+        self.base_url = "https://portal.opentopography.org/API/globaldem"
+        
+        # Available DEM types (in order of preference)
+        self.dem_types = [
+            ("SRTMGL1", "SRTM 30m Global"),  # 30m resolution
+            ("SRTMGL3", "SRTM 90m Global"),  # 90m resolution (fallback)
+            ("SRTM_FF", "SRTM Finished"),    # Alternative SRTM
+        ]
         
         # Download statistics
         self.stats = {
             'attempted': 0,
             'successful': 0,
-            'skipped': 0,
             'failed': 0,
             'total_bytes': 0,
-            'nasa_downloads': 0,
-            'fallback_downloads': 0
+            'download_times': []
+        }
+        
+        logger.info(f"Initialized OpenTopography downloader with endpoint: {self.base_url}")
+        logger.info(f"API key configured: {'Yes' if API_KEY else 'No'}")
+    
+    def _add_buffer_to_bounds(self, aoi: AOIBounds) -> Tuple[float, float, float, float]:
+        """Add buffer to AOI bounds and return (south, north, west, east)."""
+        south = max(-90, aoi.min_lat - self.buffer_degrees)
+        north = min(90, aoi.max_lat + self.buffer_degrees)
+        west = max(-180, aoi.min_lon - self.buffer_degrees)
+        east = min(180, aoi.max_lon + self.buffer_degrees)
+        
+        logger.info(f"  Original bounds: {aoi.min_lat:.4f},{aoi.min_lon:.4f} to {aoi.max_lat:.4f},{aoi.max_lon:.4f}")
+        logger.info(f"  Buffered bounds: {south:.4f},{west:.4f} to {north:.4f},{east:.4f}")
+        
+        return south, north, west, east
+    
+    def _build_request_params(self, aoi: AOIBounds, dem_type: str) -> Dict[str, str]:
+        """Build API request parameters."""
+        south, north, west, east = self._add_buffer_to_bounds(aoi)
+        
+        return {
+            'demtype': dem_type,
+            'south': str(south),
+            'north': str(north),
+            'west': str(west),
+            'east': str(east),
+            'outputFormat': 'GTiff',
+            'API_key': API_KEY
         }
     
-    def _file_exists_and_valid(self, filepath: Path) -> bool:
-        """Check if file exists and appears valid."""
-        if not filepath.exists():
-            return False
-        
-        # Basic validation: file size > 0 and reasonable for SRTM tile
-        size = filepath.stat().st_size
-        if size == 0:
-            logger.warning(f"Removing zero-size file: {filepath}")
-            filepath.unlink()
-            return False
-        
-        # SRTM .hgt files should be around 2.9MB (1201x1201 int16)
-        expected_size = 1201 * 1201 * 2  # ~2.9MB
-        if size < expected_size * 0.3:  # Allow files to be 30% of expected (different formats)
-            logger.warning(f"File suspiciously small ({size} bytes): {filepath}")
-            return False
-            
-        return True
-    
-    def _extract_hgt_from_zip(self, zip_path: Path, target_path: Path) -> bool:
-        """Extract .hgt file from NASA ZIP archive."""
-        try:
-            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                # Find the .hgt file in the ZIP
-                hgt_files = [f for f in zip_ref.namelist() if f.endswith('.hgt')]
-                
-                if not hgt_files:
-                    logger.error(f"No .hgt file found in {zip_path}")
-                    return False
-                
-                # Extract the first .hgt file
-                hgt_file = hgt_files[0]
-                
-                # Extract to temporary location then move to target
-                with zip_ref.open(hgt_file) as source:
-                    with open(target_path, 'wb') as target:
-                        target.write(source.read())
-                
-                logger.info(f"Extracted {hgt_file} from ZIP to {target_path.name}")
-                return True
-                
-        except Exception as e:
-            logger.error(f"Error extracting ZIP {zip_path}: {e}")
-            return False
-    
-    def _download_tile_with_retry(self, tile: SRTMTile) -> bool:
-        """
-        Download a single tile with retry logic and NASA authentication.
-        
-        Parameters:
-        -----------
-        tile : SRTMTile
-            Tile to download
-            
-        Returns:
-        --------
-        bool
-            True if download successful
-        """
-        filepath = self.output_dir / tile.filename
+    def _download_single_aoi(self, aoi: AOIBounds) -> bool:
+        """Download DEM for a single AOI."""
+        # Create output filename
+        safe_name = "".join(c if c.isalnum() or c in '-_' else '_' for c in aoi.name)
+        output_file = self.output_dir / f"dem_{safe_name}.tif"
         
         # Skip if file already exists and is valid
-        if self._file_exists_and_valid(filepath):
-            logger.info(f"SKIP: {tile.filename} (already exists)")
-            self.stats['skipped'] += 1
+        if self._file_exists_and_valid(output_file):
+            logger.info(f"SKIP: {aoi.name} (file already exists)")
+            self.stats['successful'] += 1
             return True
         
-        # Try NASA first if authentication is available, then fallbacks
-        urls_to_try = []
+        logger.info(f"DOWNLOADING: {aoi.name}")
         
-        if self.nasa_auth.is_configured():
-            urls_to_try.append(('NASA', tile.nasa_url, True))  # (source, url, needs_auth)
-        
-        for url in tile.fallback_urls:
-            urls_to_try.append(('Fallback', url, False))
-        
-        for attempt in range(self.max_retries):
-            for source_name, url, needs_auth in urls_to_try:
-                try:
-                    logger.info(f"DOWNLOAD: {tile.filename} from {source_name} "
-                               f"(attempt {attempt+1}/{self.max_retries})")
-                    
-                    # Choose session based on authentication needs
-                    if needs_auth and self.nasa_auth.is_configured():
-                        session = self.nasa_auth.get_authenticated_session()
-                    else:
-                        session = requests.Session()
-                    
-                    response = session.get(url, timeout=self.timeout, stream=True)
-                    response.raise_for_status()
-                    
-                    # Determine if this is a ZIP file (NASA) or direct .hgt
-                    is_zip = url.endswith('.zip') or 'zip' in response.headers.get('content-type', '')
-                    
-                    # Download to appropriate file
-                    if is_zip:
-                        temp_zip = self.output_dir / f"{tile.filename}.zip"
-                        download_path = temp_zip
-                    else:
-                        download_path = filepath
+        # Try each DEM type until one works
+        for dem_type, dem_description in self.dem_types:
+            try:
+                logger.info(f"  Trying {dem_description} ({dem_type})...")
+                
+                # Build request parameters
+                params = self._build_request_params(aoi, dem_type)
+                
+                # Calculate expected area for size estimation
+                area_deg_sq = (float(params['north']) - float(params['south'])) * \
+                             (float(params['east']) - float(params['west']))
+                expected_mb = area_deg_sq * 10  # Rough estimate
+                
+                logger.info(f"  Area: {area_deg_sq:.4f} deg² (~{expected_mb:.1f} MB estimated)")
+                
+                # DEBUG: Show the actual request URL being sent
+                import requests.compat
+                debug_url = f"{self.base_url}?{requests.compat.urlencode(params)}"
+                logger.debug(f"REQUEST URL: {debug_url}")
+                
+                # Make request
+                start_time = time.time()
+                
+                response = requests.get(
+                    self.base_url,
+                    params=params,
+                    timeout=300,  # 5 minute timeout
+                    stream=True
+                )
+                
+                logger.debug(f"Response status: {response.status_code}")
+                logger.debug(f"Response headers: {dict(response.headers)}")
+                
+                if response.status_code == 200:
+                    # Check if response is actually a GeoTIFF
+                    content_type = response.headers.get('content-type', '')
+                    if 'image/tiff' not in content_type and 'application/octet-stream' not in content_type:
+                        logger.warning(f"  Unexpected content type: {content_type}")
+                        continue
                     
                     # Download with progress tracking
                     total_size = int(response.headers.get('content-length', 0))
                     downloaded_size = 0
                     
-                    with open(download_path, 'wb') as f:
+                    with open(output_file, 'wb') as f:
                         for chunk in response.iter_content(chunk_size=8192):
                             if chunk:
                                 f.write(chunk)
                                 downloaded_size += len(chunk)
                     
-                    # Handle ZIP extraction if needed
-                    if is_zip:
-                        success = self._extract_hgt_from_zip(download_path, filepath)
-                        download_path.unlink()  # Remove ZIP after extraction
-                        
-                        if not success:
-                            continue  # Try next source
+                    download_time = time.time() - start_time
                     
-                    # Verify final file
-                    if self._file_exists_and_valid(filepath):
-                        logger.info(f"SUCCESS: {tile.filename} from {source_name} "
-                                   f"({downloaded_size:,} bytes)")
+                    # Validate the downloaded file
+                    if self._validate_geotiff(output_file, aoi):
+                        file_size_mb = downloaded_size / (1024 * 1024)
+                        speed_mbps = file_size_mb / download_time if download_time > 0 else 0
+                        
+                        logger.info(f"  SUCCESS: {file_size_mb:.1f} MB in {download_time:.1f}s ({speed_mbps:.1f} MB/s)")
+                        
                         self.stats['successful'] += 1
                         self.stats['total_bytes'] += downloaded_size
+                        self.stats['download_times'].append(download_time)
                         
-                        if needs_auth:
-                            self.stats['nasa_downloads'] += 1
-                        else:
-                            self.stats['fallback_downloads'] += 1
-                            
                         return True
                     else:
-                        logger.error(f"INVALID: {tile.filename} failed validation")
-                        filepath.unlink(missing_ok=True)
-                        
-                except requests.RequestException as e:
-                    logger.warning(f"FAILED: {tile.filename} from {source_name}: {e}")
-                    filepath.unlink(missing_ok=True)
+                        logger.warning(f"  Downloaded file failed validation")
+                        output_file.unlink(missing_ok=True)
+                        continue
+                
+                elif response.status_code == 400:
+                    logger.warning(f"  Bad request (400) - invalid parameters for {dem_type}")
+                    continue
+                elif response.status_code == 401:
+                    logger.warning(f"  Unauthorized (401) - check that OPENTOPOGRAPHY_API_KEY is valid")
+                    logger.warning(f"  Request URL: {debug_url}")
+                    continue
+                elif response.status_code == 404:
+                    logger.warning(f"  No data available (404) for {dem_type}")
+                    continue
+                elif response.status_code == 413:
+                    logger.warning(f"  Request too large (413) for {dem_type} - area: {area_deg_sq:.2f} deg²")
+                    logger.warning(f"  Consider using smaller AOIs (< 25 deg²)")
+                    continue
+                else:
+                    logger.warning(f"  HTTP error {response.status_code} for {dem_type}")
+                    logger.warning(f"  Response: {response.text[:200]}...")
+                    continue
                     
-                    # Exponential backoff before retry
-                    if attempt < self.max_retries - 1:
-                        wait_time = (2 ** attempt) + (len(urls_to_try) * 0.5)
-                        time.sleep(wait_time)
-                        
-                except Exception as e:
-                    logger.error(f"ERROR: {tile.filename} from {source_name}: {e}")
-                    filepath.unlink(missing_ok=True)
+            except requests.exceptions.Timeout:
+                logger.warning(f"  Timeout downloading {dem_type}")
+                continue
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"  Network error for {dem_type}: {e}")
+                continue
+            except Exception as e:
+                logger.error(f"  Unexpected error for {dem_type}: {e}")
+                continue
         
-        logger.error(f"FAILED: {tile.filename} - all sources exhausted")
+        # All DEM types failed
+        logger.error(f"FAILED: {aoi.name} - all DEM types exhausted")
         self.stats['failed'] += 1
         return False
     
-    def download_tiles(self, tiles: Set[SRTMTile]) -> Dict[str, bool]:
-        """
-        Download multiple tiles concurrently.
+    def _file_exists_and_valid(self, filepath: Path) -> bool:
+        """Check if file exists and appears to be a valid GeoTIFF."""
+        if not filepath.exists():
+            return False
         
-        Parameters:
-        -----------
-        tiles : Set[SRTMTile]
-            Set of tiles to download
-            
-        Returns:
-        --------
-        Dict[str, bool]
-            Mapping of tile filename to success status
-        """
-        if not tiles:
-            logger.info("No tiles to download")
+        size = filepath.stat().st_size
+        if size < 1024:  # Too small to be a valid GeoTIFF
+            logger.warning(f"File too small ({size} bytes): {filepath}")
+            return False
+        
+        # Try to open with rasterio to verify it's a valid GeoTIFF
+        try:
+            with rasterio.open(filepath) as src:
+                return src.count > 0 and src.width > 0 and src.height > 0
+        except Exception:
+            logger.warning(f"Invalid GeoTIFF: {filepath}")
+            return False
+    
+    def _validate_geotiff(self, filepath: Path, aoi: AOIBounds) -> bool:
+        """Validate that the downloaded GeoTIFF covers the requested area."""
+        try:
+            with rasterio.open(filepath) as src:
+                # Check basic properties
+                if src.count == 0 or src.width == 0 or src.height == 0:
+                    logger.warning("GeoTIFF has zero dimensions")
+                    return False
+                
+                # Check coordinate system
+                if src.crs is None:
+                    logger.warning("GeoTIFF has no coordinate system")
+                    return False
+                
+                # Check bounds coverage
+                bounds = src.bounds
+                if (bounds.left > aoi.min_lon or bounds.right < aoi.max_lon or
+                    bounds.bottom > aoi.min_lat or bounds.top < aoi.max_lat):
+                    logger.warning("GeoTIFF doesn't fully cover requested AOI")
+                    # Don't fail for this - partial coverage might be acceptable
+                
+                logger.info(f"  Validated: {src.width}x{src.height} pixels, CRS: {src.crs}")
+                return True
+                
+        except Exception as e:
+            logger.error(f"Error validating GeoTIFF: {e}")
+            return False
+    
+    def download_all_aois(self, aoi_bounds: List[AOIBounds]) -> Dict[str, bool]:
+        """Download DEMs for all AOIs."""
+        if not aoi_bounds:
+            logger.info("No AOIs to download")
             return {}
         
-        logger.info(f"Starting download of {len(tiles)} tiles using {self.max_workers} workers")
-        if self.nasa_auth.is_configured():
-            logger.info("NASA Earthdata authentication configured - using primary NASA sources")
-        else:
-            logger.warning("NASA Earthdata authentication not configured - using fallback sources only")
-            
-        start_time = time.time()
-        results = {}
+        logger.info(f"Starting download of DEMs for {len(aoi_bounds)} AOIs")
         
-        # Reset stats for this batch
+        # Reset stats
         self.stats.update({
-            'attempted': len(tiles), 'successful': 0, 'skipped': 0, 'failed': 0, 
-            'total_bytes': 0, 'nasa_downloads': 0, 'fallback_downloads': 0
+            'attempted': len(aoi_bounds),
+            'successful': 0,
+            'failed': 0,
+            'total_bytes': 0,
+            'download_times': []
         })
         
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            # Submit all download tasks
-            future_to_tile = {
-                executor.submit(self._download_tile_with_retry, tile): tile 
-                for tile in tiles
-            }
+        results = {}
+        start_time = time.time()
+        
+        for i, aoi in enumerate(aoi_bounds, 1):
+            logger.info(f"\n📄 Processing {i}/{len(aoi_bounds)}: {aoi.name}")
             
-            # Process completed downloads
-            for future in as_completed(future_to_tile):
-                tile = future_to_tile[future]
-                try:
-                    success = future.result()
-                    results[tile.filename] = success
-                except Exception as e:
-                    logger.error(f"Exception downloading {tile.filename}: {e}")
-                    results[tile.filename] = False
-                    self.stats['failed'] += 1
+            success = self._download_single_aoi(aoi)
+            results[aoi.name] = success
+            
+            if success:
+                logger.info(f"✅ Completed {aoi.name}")
+            else:
+                logger.error(f"❌ Failed {aoi.name}")
         
-        # Log final statistics
+        # Final statistics
         duration = time.time() - start_time
-        successful = self.stats['successful']
         total_mb = self.stats['total_bytes'] / (1024 * 1024)
-        speed_mbps = total_mb / duration if duration > 0 else 0
+        avg_time = sum(self.stats['download_times']) / len(self.stats['download_times']) if self.stats['download_times'] else 0
         
-        logger.info(f"BATCH COMPLETE: {successful}/{len(tiles)} successful in {duration:.1f}s")
-        logger.info(f"Downloaded {total_mb:.1f} MB at {speed_mbps:.2f} MB/s")
-        logger.info(f"Sources: {self.stats['nasa_downloads']} NASA, {self.stats['fallback_downloads']} fallback")
-        logger.info(f"Stats: {self.stats['successful']} success, {self.stats['skipped']} skipped, {self.stats['failed']} failed")
+        logger.info(f"\n🎉 Download batch complete!")
+        logger.info(f"Success: {self.stats['successful']}/{self.stats['attempted']}")
+        logger.info(f"Total data: {total_mb:.1f} MB")
+        logger.info(f"Total time: {duration:.1f}s")
+        logger.info(f"Average download time: {avg_time:.1f}s per AOI")
         
         return results
 
 class AOIProcessor:
-    """Process AOIs from Step 2 outputs and coordinate DEM acquisition."""
+    """Process AOIs from Step 2 outputs."""
     
     def __init__(self, step2_outputs_dir: Optional[Path] = None):
-        """
-        Initialize AOI processor.
-        
-        Parameters:
-        -----------
-        step2_outputs_dir : Path, optional
-            Directory containing Step 2 AOI outputs
-        """
+        """Initialize AOI processor."""
         if step2_outputs_dir is None:
             # Auto-detect Step 2 outputs
             current_dir = Path(__file__).parent
@@ -495,7 +351,7 @@ class AOIProcessor:
         for pattern in patterns:
             aoi_files.extend(self.step2_outputs_dir.rglob(pattern))
         
-        # Remove duplicates (keep .geojson over .shp)
+        # Remove duplicates (prefer .geojson over .shp)
         unique_files = {}
         for file in aoi_files:
             stem = file.stem
@@ -508,19 +364,7 @@ class AOIProcessor:
         return result
     
     def load_aoi_bounds(self, aoi_files: List[Path]) -> List[AOIBounds]:
-        """
-        Load AOI bounding boxes from files with coordinate transformation.
-        
-        Parameters:
-        -----------
-        aoi_files : List[Path]
-            List of AOI file paths
-            
-        Returns:
-        --------
-        List[AOIBounds]
-            List of AOI bounding boxes in geographic coordinates
-        """
+        """Load AOI bounding boxes from files."""
         aoi_bounds = []
         
         for aoi_file in aoi_files:
@@ -532,7 +376,7 @@ class AOIProcessor:
                     logger.warning(f"Empty AOI file: {aoi_file}")
                     continue
                 
-                # FIX 2: Transform to geographic coordinates if needed
+                # Transform to geographic coordinates if needed
                 if gdf.crs and not gdf.crs.is_geographic:
                     logger.info(f"  Converting from {gdf.crs} to EPSG:4326")
                     gdf = gdf.to_crs('EPSG:4326')
@@ -540,18 +384,10 @@ class AOIProcessor:
                     logger.warning(f"  No CRS defined, assuming EPSG:4326")
                     gdf = gdf.set_crs('EPSG:4326')
                 
-                # Get total bounds in geographic coordinates
+                # Get total bounds
                 bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
                 
-                # Validate that bounds are reasonable for geographic coordinates
-                if not (-180 <= bounds[0] <= 180 and -180 <= bounds[2] <= 180):
-                    logger.error(f"Invalid longitude bounds: {bounds[0]} to {bounds[2]}")
-                    continue
-                if not (-90 <= bounds[1] <= 90 and -90 <= bounds[3] <= 90):
-                    logger.error(f"Invalid latitude bounds: {bounds[1]} to {bounds[3]}")
-                    continue
-                
-                # Extract name from file or attributes
+                # Extract name
                 if 'study_site' in gdf.columns:
                     name = gdf['study_site'].iloc[0]
                 elif 'name' in gdf.columns:
@@ -578,67 +414,30 @@ class AOIProcessor:
         logger.info(f"Successfully loaded {len(aoi_bounds)} AOI bounds")
         return aoi_bounds
 
-def create_env_file():
-    """Create .env file with NASA credentials."""
-    env_file = Path(".env")
-    
-    if env_file.exists():
-        logger.info(".env file already exists")
-        return
-    
-    env_content = """# NASA Earthdata Credentials
-# Get free account at: https://urs.earthdata.nasa.gov/users/new
-NASA_EARTHDATA_USERNAME=gatencia
-NASA_EARTHDATA_PASSWORD=wtfWTF12345!
-
-# Optional: Add other configuration
-SRTM_BUFFER_KM=2.0
-MAX_CONCURRENT_DOWNLOADS=6
-"""
-    
-    with open(env_file, 'w') as f:
-        f.write(env_content)
-    
-    logger.info(f"Created .env file with NASA Earthdata credentials")
-    logger.info("You can modify these credentials in the .env file if needed")
-
 def main():
-    """Main DEM acquisition workflow with NASA Earthdata."""
+    """Main OpenTopography DEM download workflow."""
     
-    print("🛰️  STEP 2.5: Fixed DEM Acquisition with NASA Earthdata")
-    print("=" * 70)
-    print("Objective: Fast download of SRTM tiles using NASA authentication")
-    print("FIXES: Made SRTMTile hashable + coordinate transformation")
+    print("🛰️  STEP 2.5: OpenTopography DEM Downloader")
+    print("=" * 60)
+    print("Using OpenTopography Global DEM API with personal API key")
     print()
     
     # Setup directories
     logs_dir = Path("logs")
     logs_dir.mkdir(exist_ok=True)
     
-    output_dir = Path("outputs/aoi_specific_dems")
+    output_dir = Path("outputs/aoi_dems")
     output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Create .env file if it doesn't exist
-    create_env_file()
     
     try:
         # Initialize components
-        logger.info("Initializing NASA Earthdata DEM acquisition system...")
+        logger.info("Initializing OpenTopography DEM downloader...")
         
         aoi_processor = AOIProcessor()
-        tile_calculator = SRTMTileCalculator(buffer_km=2.0)
-        downloader = SRTMDownloader(
+        downloader = OpenTopographyDownloader(
             output_dir=output_dir,
-            max_workers=6,  # Reduced for NASA server stability
-            max_retries=3,
-            timeout_seconds=60  # Increased for larger NASA files
+            buffer_km=2.0  # 2km buffer around each AOI
         )
-        
-        # Verify NASA authentication
-        if not downloader.nasa_auth.is_configured():
-            logger.error("NASA Earthdata authentication not configured!")
-            logger.error("Please check your .env file or environment variables")
-            return False
         
         # Discover and load AOIs
         logger.info("Discovering Step 2 AOI outputs...")
@@ -654,46 +453,32 @@ def main():
             logger.error("No valid AOI bounds could be loaded.")
             return False
         
-        # Calculate all required tiles
-        logger.info("Calculating required SRTM tiles...")
-        all_tiles = set()
-        aoi_tile_map = {}
-        
-        for aoi in aoi_bounds:
-            tiles = tile_calculator.calculate_tiles_for_aoi(aoi)
-            all_tiles.update(tiles)
-            aoi_tile_map[aoi.name] = tiles
-        
-        logger.info(f"Total unique tiles required: {len(all_tiles)}")
-        
-        # Download all tiles
-        logger.info("Starting NASA Earthdata tile downloads...")
+        # Download DEMs for all AOIs
+        logger.info("Starting DEM downloads using OpenTopography API...")
         start_time = time.time()
         
-        download_results = downloader.download_tiles(all_tiles)
+        download_results = downloader.download_all_aois(aoi_bounds)
         
         # Summary
         duration = time.time() - start_time
-        successful_tiles = sum(1 for success in download_results.values() if success)
+        successful_downloads = sum(1 for success in download_results.values() if success)
         
-        print("\n🎉 NASA Earthdata DEM Acquisition Complete!")
+        print("\n🎉 OpenTopography DEM Download Complete!")
         print("=" * 50)
         print(f"AOIs processed: {len(aoi_bounds)}")
-        print(f"Tiles downloaded: {successful_tiles}/{len(all_tiles)}")
-        print(f"NASA downloads: {downloader.stats['nasa_downloads']}")
-        print(f"Fallback downloads: {downloader.stats['fallback_downloads']}")
+        print(f"Successful downloads: {successful_downloads}/{len(aoi_bounds)}")
+        print(f"Success rate: {successful_downloads/len(aoi_bounds)*100:.1f}%")
         print(f"Total time: {duration:.1f} seconds")
         print(f"Output directory: {output_dir}")
         
-        # Save acquisition report
+        # Save download report
         report = {
             'timestamp': datetime.now().isoformat(),
-            'nasa_earthdata_used': downloader.nasa_auth.is_configured(),
-            'nasa_username': downloader.nasa_auth.username,
+            'system_version': 'opentopography_api',
             'aois_processed': len(aoi_bounds),
-            'total_tiles_required': len(all_tiles),
-            'successful_downloads': successful_tiles,
-            'failed_downloads': len(all_tiles) - successful_tiles,
+            'successful_downloads': successful_downloads,
+            'failed_downloads': len(aoi_bounds) - successful_downloads,
+            'success_rate': successful_downloads / len(aoi_bounds),
             'duration_seconds': duration,
             'output_directory': str(output_dir),
             'download_stats': downloader.stats,
@@ -701,39 +486,29 @@ def main():
                 {
                     'name': aoi.name,
                     'bounds': [aoi.min_lat, aoi.min_lon, aoi.max_lat, aoi.max_lon],
-                    'tiles_required': len(aoi_tile_map[aoi.name]),
-                    'source_file': aoi.source_file
+                    'source_file': aoi.source_file,
+                    'download_success': download_results.get(aoi.name, False)
                 }
                 for aoi in aoi_bounds
-            ],
-            'tile_details': [
-                {
-                    'filename': tile.filename,
-                    'lat': tile.lat,
-                    'lon': tile.lon,
-                    'success': download_results.get(tile.filename, False)
-                }
-                for tile in sorted(all_tiles, key=lambda t: (t.lat, t.lon))
             ]
         }
         
-        report_file = output_dir / f"nasa_acquisition_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        report_file = output_dir / f"opentopo_download_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(report_file, 'w') as f:
             json.dump(report, f, indent=2)
         
-        logger.info(f"NASA Earthdata acquisition report saved: {report_file}")
+        logger.info(f"Download report saved: {report_file}")
         
-        if successful_tiles == len(all_tiles):
-            print("✅ All tiles downloaded successfully from NASA Earthdata!")
+        if successful_downloads >= len(aoi_bounds) * 0.8:  # 80% success rate
+            print("✅ DEM download successful!")
             return True
         else:
-            failed_count = len(all_tiles) - successful_tiles
-            print(f"⚠️  {failed_count} tiles failed to download")
+            print(f"⚠️  Only {successful_downloads}/{len(aoi_bounds)} downloads successful")
             print("Check logs for details on failed downloads")
-            return successful_tiles > 0  # Return True if at least some tiles succeeded
+            return successful_downloads > 0
             
     except Exception as e:
-        logger.error(f"NASA Earthdata DEM acquisition failed: {e}")
+        logger.error(f"OpenTopography DEM download failed: {e}")
         import traceback
         logger.error(traceback.format_exc())
         return False

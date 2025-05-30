@@ -1,0 +1,755 @@
+{
+  "timestamp": "2025-05-30 07:33:37",
+  "environment": {
+    "api_key_set": true,
+    "api_key_length": 32,
+    "python_version": "3.11.7 (main, Dec 15 2023, 12:09:56) [Clang 14.0.6 ]",
+    "requests_version": "2.32.3",
+    "working_directory": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2.5"
+  },
+  "test_configuration": {
+    "endpoints": {
+      "current_public": "https://portal.opentopography.org/API/globaldem",
+      "old_swift": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem",
+      "alternative": "https://portal.opentopography.org/API/global"
+    },
+    "test_bounds": [
+      {
+        "name": "Small_Test_Area",
+        "south": 4.2,
+        "north": 4.3,
+        "west": 18.2,
+        "east": 18.3
+      },
+      {
+        "name": "Central_Africa_Test",
+        "south": 4.0,
+        "north": 4.5,
+        "west": 18.0,
+        "east": 18.5
+      }
+    ]
+  },
+  "results": [
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": true,
+      "status_code": 200,
+      "message": "TIFF file received",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": true,
+      "status_code": 200,
+      "message": "TIFF file received",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Small_Test_Area",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.2&north=4.3&west=18.2&east=18.3&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": true,
+      "status_code": 200,
+      "message": "TIFF file received",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": true,
+      "status_code": 200,
+      "message": "TIFF file received",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: API Key required for access. Please register for an API key at www.opentopography.org</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "current_public",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><error>Error: SRTM_FF is not a valid dataset. Please check the API doc.</error>",
+      "url": "https://portal.opentopography.org/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "old_swift",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<html><h1>Unauthorized</h1><p>This server could not verify that you are authorized to access the document you requested.</p></html>",
+      "url": "https://cloud.sdsc.edu/v1/AUTH_opentopography/API/globaldem?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL1",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL1&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTMGL3",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTMGL3&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "api_key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&api_key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "API_Key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&API_Key=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "apikey",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&apikey=0b8cbf034cc211b680063fbd0527b187"
+    },
+    {
+      "area": "Central_Africa_Test",
+      "endpoint": "alternative",
+      "dem_type": "SRTM_FF",
+      "api_key_param": "key",
+      "success": false,
+      "status_code": null,
+      "message": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 \u2013 Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 \u2013 Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> Not Found</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/9.0.88</h3></body></html>",
+      "url": "https://portal.opentopography.org/API/global?demtype=SRTM_FF&south=4.0&north=4.5&west=18.0&east=18.5&outputFormat=GTiff&key=0b8cbf034cc211b680063fbd0527b187"
+    }
+  ]
+}

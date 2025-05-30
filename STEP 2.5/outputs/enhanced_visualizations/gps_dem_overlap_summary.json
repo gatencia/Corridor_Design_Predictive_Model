@@ -1,0 +1,54 @@
+{
+  "created_at": "2025-05-30T07:51:32.496034",
+  "dem_files": 4,
+  "gps_collars": 0,
+  "aoi_polygons": 24,
+  "total_gps_points": 0,
+  "dem_coverage": {
+    "Cameroon_Test_test_SRTMGL1_20250530_074051.tif": {
+      "bounds": [
+        9.989861111136264,
+        4.9901388888815985,
+        10.10986111113628,
+        5.110138888881615
+      ],
+      "overlapping_collars": [],
+      "gps_points_in_area": 0,
+      "aoi_polygons_in_area": 0
+    },
+    "Cameroon_Test_test_SRTMGL3_20250530_074102.tif": {
+      "bounds": [
+        9.98958333329017,
+        4.990416666679163,
+        10.109583333290143,
+        5.110416666679136
+      ],
+      "overlapping_collars": [],
+      "gps_points_in_area": 0,
+      "aoi_polygons_in_area": 0
+    },
+    "Central_Africa_Small_test_SRTMGL1_20250530_074030.tif": {
+      "bounds": [
+        17.989861111137344,
+        3.990138888881466,
+        18.209861111137375,
+        4.210138888881495
+      ],
+      "overlapping_collars": [],
+      "gps_points_in_area": 0,
+      "aoi_polygons_in_area": 0
+    },
+    "Central_Africa_Small_test_SRTMGL3_20250530_074041.tif": {
+      "bounds": [
+        17.98958333328835,
+        3.990416666679393,
+        18.2095833332883,
+        4.210416666679343
+      ],
+      "overlapping_collars": [],
+      "gps_points_in_area": 0,
+      "aoi_polygons_in_area": 0
+    }
+  },
+  "collar_coverage": {}
+}

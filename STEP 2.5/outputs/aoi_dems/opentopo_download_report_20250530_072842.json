@@ -1,0 +1,294 @@
+{
+  "timestamp": "2025-05-30T07:28:42.230832",
+  "system_version": "opentopography_api",
+  "aois_processed": 25,
+  "successful_downloads": 0,
+  "failed_downloads": 25,
+  "success_rate": 0.0,
+  "duration_seconds": 17.985190868377686,
+  "output_directory": "outputs/aoi_dems",
+  "download_stats": {
+    "attempted": 25,
+    "successful": 0,
+    "failed": 25,
+    "total_bytes": 0,
+    "download_times": []
+  },
+  "aoi_details": [
+    {
+      "name": "Dja Reserve",
+      "bounds": [
+        2.4477795245967444,
+        13.066060389688813,
+        2.930193529159552,
+        14.702941122923978
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Dja_Reserve_Collar_46178_10/aoi_Dja_Reserve_Collar_46178_10_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Benoue National Park",
+      "bounds": [
+        7.984835053650219,
+        13.460611374204385,
+        8.754178913166744,
+        16.075412895008498
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Benoue_National_Park_Collar_09104_22/aoi_Benoue_National_Park_Collar_09104_22_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke National Park",
+      "bounds": [
+        2.2367797503898323,
+        15.256007884751137,
+        3.2332316888970283,
+        16.130943320923503
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_National_Park_Collar_14118_04/aoi_Lobeke_National_Park_Collar_14118_04_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Nki National Park",
+      "bounds": [
+        2.0958119259645245,
+        14.615077131264469,
+        2.6272281056952074,
+        15.171966784557792
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Nki_National_Park_Collar_40479_02/aoi_Nki_National_Park_Collar_40479_02_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Benoue National Park",
+      "bounds": [
+        7.955827017182078,
+        12.31170154443499,
+        8.594204178867052,
+        14.411394405900156
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Benoue_National_Park_Collar_09105_23/aoi_Benoue_National_Park_Collar_09105_23_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke NP",
+      "bounds": [
+        0.19284688402692088,
+        5.707142134872516,
+        2.3408425152014662,
+        16.485586619177695
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_NP_Collar_39840_2003-2004_01/aoi_Lobeke_NP_Collar_39840_2003-2004_01_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Mt. Cameroon",
+      "bounds": [
+        3.921785735648145,
+        8.286973695156563,
+        4.713197832143021,
+        10.402988629719433
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Mt_Cameroon_Collar_73057_16/aoi_Mt_Cameroon_Collar_73057_16_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Benoue National Park",
+      "bounds": [
+        5.745225337429048,
+        10.751693773546,
+        8.623106669800965,
+        23.336693837300857
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Benoue_National_Park_Collar_47792_18/aoi_Benoue_National_Park_Collar_47792_18_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Waza National Park",
+      "bounds": [
+        10.200981861139427,
+        -0.2617187645154636,
+        14.193609577297577,
+        15.330460356568217
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Waza_National_Park_Collar_47571_15/aoi_Waza_National_Park_Collar_47571_15_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Waza National Park",
+      "bounds": [
+        10.303812507457167,
+        14.554326688935491,
+        10.484204199201727,
+        14.87563451414802
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Waza_National_Park_Collar_47793_05/aoi_Waza_National_Park_Collar_47793_05_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Dja Reserve",
+      "bounds": [
+        2.4477795245967444,
+        13.066060389688813,
+        2.930193529159552,
+        14.702941122923978
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Dja_Reserve_Collar_46178_copy_12/aoi_Dja_Reserve_Collar_46178_copy_12_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Mt. Cameroon",
+      "bounds": [
+        -0.9932308466708096,
+        8.642951236234035,
+        4.325219521837581,
+        10.143030433966468
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Mt_Cameroon_Collar_73056_17/aoi_Mt_Cameroon_Collar_73056_17_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Nki National Park",
+      "bounds": [
+        1.6370658693420472,
+        8.671363531848899,
+        2.5392036065882047,
+        15.763924780149871
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Nki_National_Park_Collar_40480_03/aoi_Nki_National_Park_Collar_40480_03_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Mt. Cameroon",
+      "bounds": [
+        4.0690548671862725,
+        8.641583422504375,
+        4.538745799134271,
+        9.731004505670592
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Mt_Cameroon_Collar_99095_1_21/aoi_Mt_Cameroon_Collar_99095_1_21_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Yankari Game Reserve",
+      "bounds": [
+        9.565401462095661,
+        9.774257845460024,
+        10.132611248161115,
+        10.67461679322429
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Yankari_Game_Reserve_Collar_126821_07/aoi_Yankari_Game_Reserve_Collar_126821_07_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Benoue National Park",
+      "bounds": [
+        7.869774782697694,
+        13.585634756668481,
+        8.66820525028023,
+        14.6103821811636
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Benoue_National_Park_Collar_14121_19/aoi_Benoue_National_Park_Collar_14121_19_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Mt. Cameroon",
+      "bounds": [
+        3.9847756213902974,
+        7.17897233368735,
+        4.659187153409795,
+        9.838011914142301
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Mt_Cameroon_Collar_87528_13/aoi_Mt_Cameroon_Collar_87528_13_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Yankari Game Reserve",
+      "bounds": [
+        9.314700651285714,
+        8.78423985372725,
+        10.489119791700897,
+        11.569900340809715
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Yankari_Game_Reserve_Collar_126820_08/aoi_Yankari_Game_Reserve_Collar_126820_08_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke National Park",
+      "bounds": [
+        2.056808844460899,
+        15.718034378571938,
+        2.385231371461417,
+        16.17393538942408
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_National_Park_Collar_46179_20/aoi_Lobeke_National_Park_Collar_46179_20_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke National Park",
+      "bounds": [
+        2.2367797503898323,
+        15.256007884751137,
+        3.2332316888970283,
+        16.130943320923503
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_National_Park_Collar_14120_11/aoi_Lobeke_National_Park_Collar_14120_11_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Waza National Park",
+      "bounds": [
+        10.295783444854754,
+        14.211221711038077,
+        11.461214596849192,
+        15.09865396357658
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Waza_National_Park_Collar_03273_06/aoi_Waza_National_Park_Collar_03273_06_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke National Park",
+      "bounds": [
+        2.1451788628001456,
+        16.027682057847468,
+        2.2516101660800762,
+        16.134658183018566
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_National_Park_Collar_39839_24/aoi_Lobeke_National_Park_Collar_39839_24_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Bouba Njida National Park",
+      "bounds": [
+        8.438820946072784,
+        13.479623181090727,
+        9.03221948904109,
+        15.548427699665751
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Bouba_Njida_National_Park_Collar_14117_09/aoi_Bouba_Njida_National_Park_Collar_14117_09_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke NP",
+      "bounds": [
+        1.9288134565740198,
+        15.476082206280852,
+        2.4191931080608966,
+        16.77489250410053
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/individual_aois/Lobeke_NP_Collar_47574_Dec_2005-2006_14/aoi_Lobeke_NP_Collar_47574_Dec_2005-2006_14_20250529_161708.geojson",
+      "download_success": false
+    },
+    {
+      "name": "Lobeke NP",
+      "bounds": [
+        -0.99323084667081,
+        -0.261718764515464,
+        14.193609577297577,
+        23.336693837300857
+      ],
+      "source_file": "/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/STEP 2/data/outputs/combined/all_aois_combined_20250529_161708.geojson",
+      "download_success": false
+    }
+  ]
+}

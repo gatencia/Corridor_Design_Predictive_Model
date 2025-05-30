@@ -12,6 +12,7 @@ import logging
 from shapely.geometry import box
 import json
 import math
+import time # Added import for timing
 
 logger = logging.getLogger(__name__)
 
@@ -28,39 +29,66 @@ class OptimizedAOIProcessor:
         
         logger.info(f"Optimized AOI processor initialized with project root: {self.project_root}")
     
+
     def find_step2_aoi_outputs(self) -> List[Dict[str, Any]]:
         """
-        Find unique AOI outputs from Step 2 with intelligent deduplication.
+        SIMPLE APPROACH: Go directly to organized individual_aois folder.
         """
-        logger.info("Searching for Step 2 AOI outputs with deduplication...")
+        logger.info("Loading individual collar AOIs from organized structure...")
         
-        # Search paths in order of preference
-        search_paths = [
-            self.step2_dir / "data" / "outputs" / "individual_aois",  # Organized structure
-            self.step2_dir / "data" / "outputs",  # Combined files
-            self.step2_dir / "outputs",  # Alternative location
-            self.step2_dir / "data" / "processed"  # Legacy location
-        ]
+        # DIRECT path to your organized collar folders
+        individual_aois_path = self.step2_dir / "data" / "outputs" / "individual_aois"
         
-        unique_aois = {}  # Key: study_site_normalized, Value: best AOI
+        if not individual_aois_path.exists():
+            logger.error(f"Directory not found: {individual_aois_path}")
+            return []
         
-        for search_path in search_paths:
-            if not search_path.exists():
+        logger.info(f"Reading from: {individual_aois_path}")
+        
+        aoi_list = []
+        collar_folders = sorted([d for d in individual_aois_path.iterdir() if d.is_dir()])
+        
+        logger.info(f"Found {len(collar_folders)} collar folders")
+        
+        for collar_folder in collar_folders:
+            # Find AOI file in this collar folder
+            aoi_files = list(collar_folder.glob("aoi_*.geojson")) + list(collar_folder.glob("aoi_*.shp"))
+            
+            if not aoi_files:
+                logger.warning(f"No AOI file in {collar_folder.name}")
                 continue
+            
+            aoi_file = aoi_files[0]  # Take first AOI file found
+            
+            try:
+                # Load AOI geometry
+                gdf = gpd.read_file(aoi_file)
+                if len(gdf) == 0:
+                    continue
                 
-            logger.info(f"Searching in: {search_path}")
-            self._discover_aois_in_path(search_path, unique_aois)
+                # Extract info
+                study_site = collar_folder.name.replace("_", " ").title()
+                area_km2 = float(gdf['area_km2'].iloc[0]) if 'area_km2' in gdf.columns else 0
+                
+                aoi_info = {
+                    'file_path': str(aoi_file),
+                    'study_site': study_site,
+                    'area_km2': area_km2,
+                    'bounds': gdf.total_bounds.tolist(),
+                    'geometry': gdf.iloc[0].geometry,
+                    'format': aoi_file.suffix,
+                    'crs': str(gdf.crs)
+                }
+                
+                aoi_list.append(aoi_info)
+                logger.info(f"✅ {study_site}: {area_km2:.1f} km²")
+                
+            except Exception as e:
+                logger.error(f"Error loading {collar_folder.name}: {e}")
         
-        # Convert to list and add metadata
-        aoi_list = list(unique_aois.values())
-        
-        logger.info(f"Found {len(aoi_list)} unique AOI files from Step 2")
-        
-        for aoi in aoi_list:
-            logger.info(f"✅ Unique AOI: {aoi['study_site']} - {aoi['area_km2']:.1f} km² ({aoi['format']})")
-        
+        logger.info(f"Loaded {len(aoi_list)} individual collar AOIs")
         return aoi_list
-    
+
     def _discover_aois_in_path(self, search_path: Path, unique_aois: Dict[str, Dict[str, Any]]):
         """Discover AOIs in a specific path and deduplicate."""
         
@@ -237,20 +265,38 @@ class OptimizedAOIProcessor:
         """
         Calculate DEM requirements with optimization for overlapping areas.
         """
+        method_start_time = time.time() # Start timer for the whole method
         logger.info(f"Calculating optimized DEM requirements for {len(aoi_list)} unique AOIs...")
+        print(f"Starting calculation of optimized DEM requirements for {len(aoi_list)} unique AOIs...")
         
         from dem_downloader import DEMDownloader, DEMSource
         
         downloader = DEMDownloader()
-        
-        # Collect all tiles needed
+        print("DEMDownloader initialized for DEM requirement calculation.")
+
         all_tiles = set()
         aoi_details = []
         
-        for aoi in aoi_list:
+        total_aois = len(aoi_list)
+        processed_aois_count = 0
+        cumulative_processing_time = 0.0
+
+        print(f"Processing {total_aois} AOIs to determine DEM tile requirements (buffer: {buffer_km} km)...")
+        for i, aoi in enumerate(aoi_list):
+            aoi_processing_start_time = time.time() # Start timer for this AOI
+            
+            current_aoi_name = aoi.get('study_site', f'UnknownAOI_{i+1}')
+            current_aoi_area = aoi.get('area_km2', 0)
+            print(f"  Processing AOI {i+1}/{total_aois}: {current_aoi_name} (Area: {current_aoi_area:.1f} km²)...")
+            
             bounds = aoi['bounds']
+            print(f"    Original bounds for {current_aoi_name}: {bounds}")
+            
             buffered_bounds = downloader.buffer_bounds(bounds, buffer_km)
+            print(f"    Buffered bounds ({buffer_km} km) for {current_aoi_name}: {buffered_bounds}")
+            
             tiles = downloader.get_required_dem_tiles(buffered_bounds, DEMSource.NASADEM)
+            print(f"    Required DEM tiles for {current_aoi_name}: {list(tiles)} ({len(tiles)} tiles)")
             
             aoi_details.append({
                 'study_site': aoi['study_site'],
@@ -263,7 +309,24 @@ class OptimizedAOIProcessor:
             all_tiles.update(tiles)
             
             logger.info(f"   • {aoi['study_site']}: {len(tiles)} tiles ({aoi['area_km2']:.1f} km²)")
+
+            aoi_processing_end_time = time.time()
+            time_taken_for_aoi = aoi_processing_end_time - aoi_processing_start_time
+            processed_aois_count += 1
+            cumulative_processing_time += time_taken_for_aoi
+            average_time_per_aoi = cumulative_processing_time / processed_aois_count
+            remaining_aois = total_aois - processed_aois_count
+            estimated_time_remaining = remaining_aois * average_time_per_aoi
+
+            print(f"      Time for this AOI ({current_aoi_name}): {time_taken_for_aoi:.2f}s")
+            print(f"      Average time per AOI so far: {average_time_per_aoi:.2f}s")
+            if remaining_aois > 0:
+                print(f"      Estimated time remaining for AOI processing: {estimated_time_remaining:.2f}s ({remaining_aois} AOIs left)")
+            else:
+                print("      All AOIs processed.")
+            print("-" * 20) # Separator for readability
         
+        print("All AOIs processed. Finalizing DEM requirements summary...")
         # Calculate efficiency
         total_individual_tiles = sum(len(detail['required_tiles']) for detail in aoi_details)
         unique_tiles = len(all_tiles)
@@ -285,6 +348,10 @@ class OptimizedAOIProcessor:
         logger.info(f"   Efficiency gain: {efficiency:.1f}% reduction")
         logger.info(f"   Estimated download: {requirements['estimated_size_mb']:.0f} MB")
         
+        method_end_time = time.time()
+        total_method_time = method_end_time - method_start_time
+        print(f"DEM requirement calculation complete. Summary generated.")
+        print(f"Total time taken for DEM requirement calculation: {total_method_time:.2f} seconds.")
         return requirements
     
     def get_optimization_summary(self) -> Dict[str, Any]:

@@ -360,8 +360,11 @@ def main():
     
     # Find GPS data
     data_paths = [
-        Path("../GPS_Collar_CSV_Mark"),
-        Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/GPS_Collar_CSV_Mark")
+        Path("../GPS_Collar_CSV_Mark"),  # Relative to STEP 2 folder
+        Path("/Users/guillaumeatencia/Documents/Projects_2025/Elephant_Corridor_Research/GPS_Collar_CSV_Mark"), # Absolute path - ensuring this is correctly terminated
+        Path("data/raw/gps_data"), # Relative to STEP 2 folder (assuming structure from run.py)
+        Path("../../GPS_Collar_CSV_Mark"), # Relative to project root if script is in STEP 2/
+        # Add more potential paths here if needed
     ]
     
     data_dir = None
